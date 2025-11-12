@@ -184,5 +184,18 @@ button:focus-visible {
   }
   body {
     @apply bg-background text-foreground;
+    width: 100vw;
+    max-width: 100vw;
+    /* overflow-y: scroll; */
+    padding: 0;
+    background-color: #111825;
+    overflow-x: hidden;
   }
 }
+/* body {
+  
+   background-color: #101922; 
+  width: 100vw;
+  max-width: 100vw;
+  overflow-y: scroll;
+} */
