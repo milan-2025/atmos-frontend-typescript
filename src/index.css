@@ -192,6 +192,32 @@ button:focus-visible {
     overflow-x: hidden;
   }
 }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  /* border-radius: 20em !important; */
+  /* 1. Use an inset box-shadow to cover the browser's default background.
+       Change '#ffffff' to your desired background color.
+       The blur radius (0) and spread (1000px) ensure the entire field is covered.
+    */
+  -webkit-box-shadow: 0 0 0 9999px #1f2937 inset !important;
+  background-clip: content-box !important;
+  /* padding: -30em; */
+
+  /* 2. (Optional but recommended) Set the text color, as the browser may also override this. 
+       Change '#000000' to your desired text color. 
+    */
+  -webkit-text-fill-color: #d1d5dc !important;
+
+  /* 3. (Optional but recommended) Set the caret/cursor color for better contrast */
+  caret-color: #d1d5dc !important;
+
+  /* 4. (Optional for transparent backgrounds) If you want a transparent background, you can use: 
+       -webkit-background-clip: text; 
+       transition: background-color 5000s ease-in-out 0s; 
+    */
+}
 /* body {
   
    background-color: #101922; 
