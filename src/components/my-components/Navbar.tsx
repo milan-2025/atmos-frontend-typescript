@@ -12,7 +12,7 @@ const Navbar: React.FC = () => {
         </div>
         <div className="flex flex-row w-full justify-center">
           <div className="flex w-10/12 ml-[-3.5em] text-gray-200 font-medium">
-            Atmos-Logo
+            Atmos-Logo-test
           </div>
         </div>
       </nav>
