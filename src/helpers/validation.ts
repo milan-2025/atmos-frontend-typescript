@@ -35,7 +35,7 @@ export function doConfimPasswordMatch(
   value: string,
   password: string
 ): IsValid {
-  console.log(value, password)
+  //   console.log(value, password)
   return {
     chk: String(value) == String(password),
     message: "Confirm Password and Password do not match.",

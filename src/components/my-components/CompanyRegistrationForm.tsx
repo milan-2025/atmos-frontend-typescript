@@ -8,7 +8,7 @@ import {
   isValidEmail,
   isValidPassword,
 } from "@/helpers/validation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 const CompanyRegistrationForm: React.FC = () => {
   const {
     value: companyName,
@@ -78,6 +78,7 @@ const CompanyRegistrationForm: React.FC = () => {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [formisDisabled, setFormisDisabled] = useState(true)
 
   const toggleShowPassword = () => {
     setShowPassword((oldValue) => !oldValue)
@@ -85,6 +86,53 @@ const CompanyRegistrationForm: React.FC = () => {
   const toggleShowConfirmPassword = () => {
     setShowConfirmPassword((oldValue) => !oldValue)
   }
+
+  const handleCreateAccount = () => {
+    handleCompanyBlur()
+    handleCompanyLocationBlur()
+    handleEmailBlur()
+    handleconfirmPasswordBlur()
+    handlepasswordBlur()
+    if (formisDisabled) {
+      return
+    }
+    if (
+      (companyError && !companyError.chk) ||
+      (companyLocationError && !companyLocationError.chk) ||
+      (EmailError && !EmailError.chk) ||
+      (passwordError && !passwordError.chk) ||
+      (confirmPasswordError && !confirmPasswordError.chk)
+    ) {
+      return
+    }
+
+    let dataTosend = {
+      companyName: companyName.trim(),
+      companyLocation: companyLocation.trim(),
+      adminEmail: email.trim(),
+      password: password.trim(),
+    }
+    console.log("data to send ---", dataTosend)
+  }
+  useEffect(() => {
+    if (
+      companyNameEdit &&
+      companyLocationEdit &&
+      emailDidEdit &&
+      passwordEdit &&
+      confirmPasswordEdit
+    ) {
+      setFormisDisabled(false)
+    } else {
+      setFormisDisabled(true)
+    }
+  }, [
+    companyNameEdit,
+    companyLocationEdit,
+    emailDidEdit,
+    passwordEdit,
+    confirmPasswordEdit,
+  ])
   return (
     <div
       id="setup-form"
@@ -216,8 +264,11 @@ const CompanyRegistrationForm: React.FC = () => {
               {confirmPasswordError.message}
             </div>
           )}
-        <div className="mt-5">
-          <Button className="bg-blue-400/80 hover:bg-[#4A90E2] cursor-pointer w-full">
+        <div onClick={handleCreateAccount} className="mt-5">
+          <Button
+            disabled={formisDisabled}
+            className="bg-blue-400/80 hover:bg-[#4A90E2] cursor-pointer w-full"
+          >
             Create Admin Account
           </Button>
         </div>
