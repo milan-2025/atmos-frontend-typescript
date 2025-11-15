@@ -1,14 +1,19 @@
-import { Button } from "@/components/ui/button"
-import MyInput from "./MyInput"
-import { Eye, EyeOff } from "lucide-react"
-import useInputValidation from "@/hooks/useInputValidation"
+import { Button } from "@/components/ui/button";
+import MyInput from "./MyInput";
+import { Eye, EyeOff } from "lucide-react";
+import useInputValidation from "@/hooks/useInputValidation";
 import {
   doConfimPasswordMatch,
   isNotEmpty,
   isValidEmail,
   isValidPassword,
-} from "@/helpers/validation"
-import { useEffect, useState } from "react"
+} from "@/helpers/validation";
+import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { registerCompanyHandler } from "@/http/apiHandlers";
+import type { ICreateCompany } from "@/http/apiHandlerInterfaces";
+import { toast } from "sonner";
+
 const CompanyRegistrationForm: React.FC = () => {
   const {
     value: companyName,
@@ -18,8 +23,8 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: companyFocus,
     error: companyError,
   } = useInputValidation("", () => {
-    return isNotEmpty(companyName)
-  })
+    return isNotEmpty(companyName);
+  });
 
   const {
     value: companyLocation,
@@ -29,8 +34,19 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: companyLocationFocus,
     error: companyLocationError,
   } = useInputValidation("", () => {
-    return isNotEmpty(companyLocation)
-  })
+    return isNotEmpty(companyLocation);
+  });
+
+  const {
+    value: fullName,
+    didEdit: didFullNameEdit,
+    handleOnBlur: handleFullNameBlur,
+    handleOnChange: handleFullNameChange,
+    handleFocus: fullNameFocus,
+    error: fullNameError,
+  } = useInputValidation("", () => {
+    return isNotEmpty(fullName);
+  });
 
   const {
     value: email,
@@ -41,11 +57,11 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: emailFocus,
   } = useInputValidation("", () => {
     if (isNotEmpty(email).chk) {
-      return isValidEmail(email)
+      return isValidEmail(email);
     } else {
-      return isNotEmpty(email)
+      return isNotEmpty(email);
     }
-  })
+  });
 
   const {
     value: password,
@@ -56,11 +72,11 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: passwordFocus,
   } = useInputValidation("", () => {
     if (isNotEmpty(password).chk) {
-      return isValidPassword(password)
+      return isValidPassword(password);
     } else {
-      return isNotEmpty(password)
+      return isNotEmpty(password);
     }
-  })
+  });
 
   const {
     value: confirmPassword,
@@ -71,48 +87,97 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: confirmPasswordFocus,
   } = useInputValidation("", () => {
     if (isNotEmpty(confirmPassword).chk) {
-      return doConfimPasswordMatch(confirmPassword, password)
+      return doConfimPasswordMatch(confirmPassword, password);
     } else {
-      return isNotEmpty(confirmPassword)
+      return isNotEmpty(confirmPassword);
     }
-  })
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [formisDisabled, setFormisDisabled] = useState(true)
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formisDisabled, setFormisDisabled] = useState(true);
+  const [serverFieldError,setServerFieldErrors] = useState<any>({})
 
   const toggleShowPassword = () => {
-    setShowPassword((oldValue) => !oldValue)
-  }
+    setShowPassword((oldValue) => !oldValue);
+  };
   const toggleShowConfirmPassword = () => {
-    setShowConfirmPassword((oldValue) => !oldValue)
-  }
+    setShowConfirmPassword((oldValue) => !oldValue);
+  };
+
+  // tanstack query code to handle mutation
+
+  const { mutate, isPending, isError, error, reset } = useMutation({
+    mutationFn: registerCompanyHandler,
+    retry: false,
+    onSuccess: (data) => {
+      console.log("after register company:-", data.message);
+      toast.success("Company Registered", {
+        classNames: {
+          toast: "!bg-green-500 !text-gray-100 !border-0",
+        },
+        position: "top-right",
+      });
+    },
+  });
 
   const handleCreateAccount = () => {
-    handleCompanyBlur()
-    handleCompanyLocationBlur()
-    handleEmailBlur()
-    handleconfirmPasswordBlur()
-    handlepasswordBlur()
+    handleCompanyBlur();
+    handleCompanyLocationBlur();
+    handleEmailBlur();
+    handleconfirmPasswordBlur();
+    handlepasswordBlur();
+    handleFullNameBlur();
     if (formisDisabled) {
-      return
+      return;
     }
     if (
       (companyError && !companyError.chk) ||
       (companyLocationError && !companyLocationError.chk) ||
       (EmailError && !EmailError.chk) ||
       (passwordError && !passwordError.chk) ||
-      (confirmPasswordError && !confirmPasswordError.chk)
+      (confirmPasswordError && !confirmPasswordError.chk) ||
+      (fullNameError && !fullNameError.chk)
     ) {
-      return
+      return;
     }
 
-    let dataTosend = {
+    let dataTosend: ICreateCompany = {
       companyName: companyName.trim(),
-      companyLocation: companyLocation.trim(),
+      location: companyLocation.trim(),
+      fullName: fullName.trim(),
       adminEmail: email.trim(),
       password: password.trim(),
+    };
+    mutate(dataTosend);
+  };
+
+  // handling errors for mutaion
+  if (isError) {
+    // console.log('Error in registring company-',error)
+    //@ts-ignore
+    if (error.info) {
+      //@ts-ignore
+
+      setServerFieldErrors(error.info.errors);
+      //@ts-ignore
+      if (error.info.errors.error) {
+        toast.error("Some error occurred", {
+          classNames: {
+            toast: "!bg-red-400 !text-gray-100 !border-0",
+          },
+          position: "top-right",
+        });
+      }
+    } else {
+      console.log("error during registring company-", error);
+      toast.error("some error occurred", {
+        classNames: {
+          toast: "!bg-red-400 !text-gray-100 !border-0",
+        },
+        position: "top-right",
+      });
     }
-    console.log("data to send ---", dataTosend)
+    reset();
   }
   useEffect(() => {
     if (
@@ -120,11 +185,12 @@ const CompanyRegistrationForm: React.FC = () => {
       companyLocationEdit &&
       emailDidEdit &&
       passwordEdit &&
-      confirmPasswordEdit
+      confirmPasswordEdit &&
+      didFullNameEdit
     ) {
-      setFormisDisabled(false)
+      setFormisDisabled(false);
     } else {
-      setFormisDisabled(true)
+      setFormisDisabled(true);
     }
   }, [
     companyNameEdit,
@@ -132,7 +198,8 @@ const CompanyRegistrationForm: React.FC = () => {
     emailDidEdit,
     passwordEdit,
     confirmPasswordEdit,
-  ])
+    didFullNameEdit,
+  ]);
   return (
     <div
       id="setup-form"
@@ -161,6 +228,10 @@ const CompanyRegistrationForm: React.FC = () => {
             {companyError.message}
           </div>
         )}
+        {serverFieldError.hasOwnProperty("companyName") && ( <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+            {serverFieldError.companyName}
+          </div>
+        )}
 
         <div className="mt-3">
           <MyInput
@@ -180,6 +251,33 @@ const CompanyRegistrationForm: React.FC = () => {
               {companyLocationError.message}
             </div>
           )}
+          {serverFieldError.hasOwnProperty("location") && ( <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+            {serverFieldError.location}
+          </div>
+        )}
+
+        <div className="mt-3">
+          <MyInput
+            id="yourName"
+            title="Your Full Name"
+            placeholder="Eg. Henry Bann"
+            // helperText="This email will be associated to admin account."
+            value={fullName}
+            onBlur={handleFullNameBlur}
+            onChange={handleFullNameChange}
+            onFocus={fullNameFocus}
+          />
+        </div>
+        {didFullNameEdit && fullNameError && !fullNameError.chk && (
+          <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+            {fullNameError.message}
+          </div>
+        )}
+
+        {serverFieldError.hasOwnProperty("fullName") && ( <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+            {serverFieldError.fullName}
+          </div>
+        )}
 
         <div className="mt-3">
           <MyInput
@@ -196,6 +294,10 @@ const CompanyRegistrationForm: React.FC = () => {
         {emailDidEdit && EmailError && !EmailError.chk && (
           <div className="text-sm pl-1.5 mt-1.5 text-red-400">
             {EmailError.message}
+          </div>
+        )}
+        {serverFieldError.hasOwnProperty("adminEmail") && ( <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+            {serverFieldError.adminEmail}
           </div>
         )}
         <div className="mt-3 relative">
@@ -228,6 +330,10 @@ const CompanyRegistrationForm: React.FC = () => {
         {passwordEdit && passwordError && !passwordError.chk && (
           <div className="text-sm pl-1.5 mt-1.5 text-red-400">
             {passwordError.message}
+          </div>
+        )}
+        {serverFieldError.hasOwnProperty("password") && ( <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+            {serverFieldError.password}
           </div>
         )}
         <div className="mt-3 relative">
@@ -266,10 +372,10 @@ const CompanyRegistrationForm: React.FC = () => {
           )}
         <div onClick={handleCreateAccount} className="mt-5">
           <Button
-            disabled={formisDisabled}
+            disabled={formisDisabled || isPending}
             className="bg-blue-400/80 hover:bg-[#4A90E2] cursor-pointer w-full"
           >
-            Create Admin Account
+            {isPending ? "Registring Account" : "Create Admin Account"}
           </Button>
         </div>
         <div className="text-sm[1em] mt-1.5 text-gray-400 text-center">
@@ -278,7 +384,7 @@ const CompanyRegistrationForm: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CompanyRegistrationForm
+export default CompanyRegistrationForm;
