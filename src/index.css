@@ -142,6 +142,7 @@ button:focus-visible {
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+  --my-custom-background: oklch(0.2347 0.016 249.7);
 }
 
 .dark {
@@ -188,7 +189,7 @@ button:focus-visible {
     max-width: 100vw;
     /* overflow-y: scroll; */
     padding: 0;
-    background-color: #111825;
+    background-color: #101922;
     overflow-x: hidden;
   }
 }

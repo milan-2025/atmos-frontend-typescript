@@ -13,6 +13,8 @@ import { useMutation } from "@tanstack/react-query";
 import { registerCompanyHandler } from "@/http/apiHandlers";
 import type { ICreateCompany } from "@/http/apiHandlerInterfaces";
 import { toast } from "sonner";
+import useAppDispatch from "@/hooks/useAppDispatch";
+import { handleLogin } from "@/store/authSlice";
 
 const CompanyRegistrationForm: React.FC = () => {
   const {
@@ -105,12 +107,16 @@ const CompanyRegistrationForm: React.FC = () => {
   };
 
   // tanstack query code to handle mutation
-
+  const dispatch = useAppDispatch()
   const { mutate, isPending, isError, error, reset } = useMutation({
     mutationFn: registerCompanyHandler,
     retry: false,
     onSuccess: (data) => {
       console.log("after register company:-", data.message);
+      dispatch(handleLogin({
+        token: data.token,
+        expirationTime: new Date().getTime() + 9 * 60 * 60 * 1000, // 9 hours expiration time
+      }))
       toast.success("Company Registered", {
         classNames: {
           toast: "!bg-green-500 !text-gray-100 !border-0",
