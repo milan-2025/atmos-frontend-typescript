@@ -1,6 +1,6 @@
-import { HeartPulseIcon, MessageSquare, PartyPopper } from "lucide-react"
+import { HeartPulseIcon, MessageSquare, PartyPopper } from "lucide-react";
 
-import registrationPic from "../../assets/companyRegistration.png"
+import registrationPic from "../../assets/companyRegistration.png";
 
 const CompanyRegistrationInfo: React.FC = () => {
   return (
@@ -68,7 +68,7 @@ const CompanyRegistrationInfo: React.FC = () => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CompanyRegistrationInfo
+export default CompanyRegistrationInfo;

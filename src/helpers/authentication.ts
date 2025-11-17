@@ -20,7 +20,7 @@ export const getExpirationTimeFromLocalStorage = () =>{
 export const isTokenExpired = ()=>{
     const expirationTime  = getExpirationTimeFromLocalStorage()
     if(expirationTime){
-        return expirationTime < new Date().getTime();
+        return expirationTime  < new Date().getTime();
     }
     return false;
 }
