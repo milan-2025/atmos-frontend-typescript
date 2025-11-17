@@ -12,6 +12,8 @@ import {
 import useAppSelector from "./hooks/useAppSelector";
 import useAppDispatch from "./hooks/useAppDispatch";
 import { handleLogin, handleLogout } from "./store/authSlice";
+import Login from "./pages/Login";
+import ManageTeams from "./pages/ManageTeams";
 
 function App() {
   const router = createBrowserRouter([
@@ -23,6 +25,14 @@ function App() {
           index: true,
           element: <CompanyRegistration />,
         },
+        {
+          path: "/login",
+          element: <Login />,
+        },
+        {
+          path: "/admin/manage-teams",
+          element: <ManageTeams />,
+        },
       ],
     },
   ]);
@@ -31,7 +41,9 @@ function App() {
   const dispatch = useAppDispatch();
   useEffect(() => {
     // handle refresh page token logic here
-    if (getTokenFromLocalStorage() && !isTokenExpired() && !auth) {
+    console.log("getTokenFromLocalStorage():", getTokenFromLocalStorage());
+    console.log("isTokenExpired():", isTokenExpired());
+    if (getTokenFromLocalStorage() && !isTokenExpired() && !auth.token) {
       let localToken = getTokenFromLocalStorage();
       let expirationTime = getExpirationTimeFromLocalStorage();
       dispatch(
@@ -45,7 +57,7 @@ function App() {
 
   // token logic for expiry
   useEffect(() => {
-    if (!auth) {
+    if (!auth.token) {
       return;
     }
     console.log("is token expired:", isTokenExpired());
@@ -62,7 +74,7 @@ function App() {
       return;
     }, remainingTime);
     return () => clearTimeout(lastTimeout);
-  }, [auth]);
+  }, [auth.token]);
   return <RouterProvider router={router} />;
 }
 

@@ -15,8 +15,10 @@ import type { ICreateCompany } from "@/http/apiHandlerInterfaces";
 import { toast } from "sonner";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import { handleLogin } from "@/store/authSlice";
+import { useNavigate } from "react-router";
 
 const CompanyRegistrationForm: React.FC = () => {
+  const navigate = useNavigate();
   const {
     value: companyName,
     didEdit: companyNameEdit,
@@ -97,7 +99,7 @@ const CompanyRegistrationForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formisDisabled, setFormisDisabled] = useState(true);
-  const [serverFieldError,setServerFieldErrors] = useState<any>({})
+  const [serverFieldError, setServerFieldErrors] = useState<any>({});
 
   const toggleShowPassword = () => {
     setShowPassword((oldValue) => !oldValue);
@@ -107,22 +109,26 @@ const CompanyRegistrationForm: React.FC = () => {
   };
 
   // tanstack query code to handle mutation
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const { mutate, isPending, isError, error, reset } = useMutation({
     mutationFn: registerCompanyHandler,
     retry: false,
     onSuccess: (data) => {
       console.log("after register company:-", data.message);
-      dispatch(handleLogin({
-        token: data.token,
-        expirationTime: new Date().getTime() + 9 * 60 * 60 * 1000, // 9 hours expiration time
-      }))
+      dispatch(
+        handleLogin({
+          token: data.token,
+          expirationTime: new Date().getTime() + 9 * 60 * 60 * 1000, // 9 hours expiration time
+        })
+      );
       toast.success("Company Registered", {
         classNames: {
           toast: "!bg-green-500 !text-gray-100 !border-0",
         },
         position: "top-right",
       });
+      //navigate to manage teams page]
+      navigate("/admin/manage-teams");
     },
   });
 
@@ -234,7 +240,8 @@ const CompanyRegistrationForm: React.FC = () => {
             {companyError.message}
           </div>
         )}
-        {serverFieldError.hasOwnProperty("companyName") && ( <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+        {serverFieldError.hasOwnProperty("companyName") && (
+          <div className="text-sm pl-1.5 mt-1.5 text-red-400">
             {serverFieldError.companyName}
           </div>
         )}
@@ -257,7 +264,8 @@ const CompanyRegistrationForm: React.FC = () => {
               {companyLocationError.message}
             </div>
           )}
-          {serverFieldError.hasOwnProperty("location") && ( <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+        {serverFieldError.hasOwnProperty("location") && (
+          <div className="text-sm pl-1.5 mt-1.5 text-red-400">
             {serverFieldError.location}
           </div>
         )}
@@ -280,7 +288,8 @@ const CompanyRegistrationForm: React.FC = () => {
           </div>
         )}
 
-        {serverFieldError.hasOwnProperty("fullName") && ( <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+        {serverFieldError.hasOwnProperty("fullName") && (
+          <div className="text-sm pl-1.5 mt-1.5 text-red-400">
             {serverFieldError.fullName}
           </div>
         )}
@@ -302,7 +311,8 @@ const CompanyRegistrationForm: React.FC = () => {
             {EmailError.message}
           </div>
         )}
-        {serverFieldError.hasOwnProperty("adminEmail") && ( <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+        {serverFieldError.hasOwnProperty("adminEmail") && (
+          <div className="text-sm pl-1.5 mt-1.5 text-red-400">
             {serverFieldError.adminEmail}
           </div>
         )}
@@ -338,7 +348,8 @@ const CompanyRegistrationForm: React.FC = () => {
             {passwordError.message}
           </div>
         )}
-        {serverFieldError.hasOwnProperty("password") && ( <div className="text-sm pl-1.5 mt-1.5 text-red-400">
+        {serverFieldError.hasOwnProperty("password") && (
+          <div className="text-sm pl-1.5 mt-1.5 text-red-400">
             {serverFieldError.password}
           </div>
         )}
