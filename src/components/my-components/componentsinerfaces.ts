@@ -9,3 +9,8 @@ export interface IMyNavLinkProps {
     label: string;
     Icon: React.FC<React.SVGProps<SVGSVGElement>>;
 }
+
+export interface ICreateTeamModalProps {
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
+}
