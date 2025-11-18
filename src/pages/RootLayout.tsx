@@ -1,10 +1,14 @@
-import Navbar from "@/components/my-components/Navbar"
-import { Outlet } from "react-router"
-import { Toaster } from "sonner"
+import LoadingScreen from "@/components/my-components/LoadingScreen";
+import Navbar from "@/components/my-components/Navbar";
+import { Outlet, useNavigation } from "react-router";
+import { Toaster } from "sonner";
 
 const RootLayout: React.FC = () => {
+  const navigation = useNavigation();
+  let isLoading = navigation.state == "loading";
   return (
     <>
+      {isLoading && <LoadingScreen />}
       <header>
         <Navbar />
         <Toaster />
@@ -13,7 +17,7 @@ const RootLayout: React.FC = () => {
         <Outlet />
       </main>
     </>
-  )
-}
+  );
+};
 
-export default RootLayout
+export default RootLayout;

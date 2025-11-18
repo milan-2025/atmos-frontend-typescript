@@ -29,7 +29,7 @@ const MyDrawer: React.FC<IMyDrawerProps> = ({
   const logoutHandler = () => {
     handleLocalStorageLogout();
     dispatch(handleLogout());
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
   return (

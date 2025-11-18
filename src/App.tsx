@@ -7,6 +7,8 @@ import {
   getExpirationTimeFromLocalStorage,
   getRemainingExpirationTime,
   getTokenFromLocalStorage,
+  isAdmin,
+  isLoggedIn,
   isTokenExpired,
 } from "./helpers/authentication";
 import useAppSelector from "./hooks/useAppSelector";
@@ -14,24 +16,73 @@ import useAppDispatch from "./hooks/useAppDispatch";
 import { handleLogin, handleLogout } from "./store/authSlice";
 import Login from "./pages/Login";
 import ManageTeams from "./pages/ManageTeams";
+import EmployeeDashboard from "./pages/EmployeeDasbhboard";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <RootLayout />,
+      // ➡️ The Parent Loader now checks the current path before redirecting
+      loader: async ({ request }) => {
+        // Get the current path (e.g., '/', '/login', '/admin/manage-teams')
+        const pathname = new URL(request.url).pathname;
+
+        // 1. Check if the user is logged in
+        if (await isLoggedIn()) {
+          if (await isAdmin()) {
+            if (pathname === "/" || pathname === "/login") {
+              return redirect("/admin/manage-teams", {
+                replace: true,
+              } as ResponseInit);
+            }
+          } else {
+            if (pathname === "/" || pathname === "/login") {
+              return redirect("/employee-dashboard", {
+                replace: true,
+              } as ResponseInit);
+            }
+          }
+
+          return null;
+        }
+
+        return null;
+      },
       children: [
         {
           index: true,
           element: <CompanyRegistration />,
+          // No loader needed here anymore
         },
         {
           path: "/login",
           element: <Login />,
+          // No loader needed here anymore
         },
         {
           path: "/admin/manage-teams",
           element: <ManageTeams />,
+          // This loader now ONLY focuses on the Admin check
+          loader: async () => {
+            if (!(await isAdmin())) {
+              return redirect("/login", {
+                replace: true,
+              } as ResponseInit);
+            }
+          },
+        },
+        {
+          path: "/employee-dashboard",
+          element: <EmployeeDashboard />,
+          // This loader now ONLY focuses on the IsLoggedIn check
+          loader: async () => {
+            if (!(await isLoggedIn())) {
+              return redirect("/login", {
+                replace: true,
+              } as ResponseInit);
+            }
+          },
         },
       ],
     },

@@ -10,6 +10,7 @@ const MyNavLink: React.FC<IMyNavLinkProps> = ({
   return (
     <NavLink
       to={to}
+      replace={true}
       className={({ isActive }) => {
         return isActive
           ? "bg-blue-400/10 rounded-lg text-blue-400 nav-link"

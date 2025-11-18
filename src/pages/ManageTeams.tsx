@@ -8,6 +8,9 @@ const ManageTeams: React.FC = () => {
   const handleOpenCreateTeamModal = () => {
     setOpenCreateTeamModal(true);
   };
+  const closeCreateTeamModal = () => {
+    setOpenCreateTeamModal(false);
+  };
   return (
     <>
       <div
@@ -55,6 +58,7 @@ const ManageTeams: React.FC = () => {
       <CreateTeamNModal
         isOpen={openCreateTeamModal}
         setIsOpen={setOpenCreateTeamModal}
+        handleClose={closeCreateTeamModal}
       />
     </>
   );

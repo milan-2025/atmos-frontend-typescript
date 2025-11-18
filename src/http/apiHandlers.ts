@@ -1,5 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import type { ICreateCompany, IRegisterCompanySuccessResponse } from "./apiHandlerInterfaces";
+import type { ICreateTeam } from "@/components/my-components/componentsinerfaces";
+import { getTokenFromLocalStorage } from "@/helpers/authentication";
 
 const baseURL = "http://localhost:3000";
 
@@ -31,4 +33,33 @@ export const registerCompanyHandler = async (createCompanyData: ICreateCompany)=
 
     let data: IRegisterCompanySuccessResponse = await response.json()
     return data 
-  } 
+  }
+  
+export const createTeamHandler = async (createTeamData: ICreateTeam)=> {
+    const token = getTokenFromLocalStorage();
+    if(!token){
+      let error:  Error | any = new Error("Error while creating team. No token found.")
+        // error.code = response.status
+        // error.info = await response.json()
+        throw error;
+    }
+    const response = await fetch(`${baseURL}/api/admin/create-team`,{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(createTeamData)
+      })
+
+      if(!response.ok){
+        let error:  Error | any = new Error("Error while creating team")
+        error.code = response.status
+        error.info = await response.json()
+        throw error;
+      }
+
+    let data: IRegisterCompanySuccessResponse = await response.json()
+    return data 
+  }
+

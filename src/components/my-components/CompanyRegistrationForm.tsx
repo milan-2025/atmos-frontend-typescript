@@ -16,9 +16,24 @@ import { toast } from "sonner";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import { handleLogin } from "@/store/authSlice";
 import { useNavigate } from "react-router";
+import { isAdmin, isLoggedIn } from "@/helpers/authentication";
 
 const CompanyRegistrationForm: React.FC = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    async function checkAuth() {
+      // This is the synchronous check that fires immediately upon component render
+      if (await isLoggedIn()) {
+        if (await isAdmin()) {
+          // Use navigate with { replace: true } to enforce the history replacement
+          navigate("/admin/manage-teams", { replace: true });
+        } else {
+          navigate("/employee-dashboard", { replace: true });
+        }
+      }
+    }
+    checkAuth();
+  }, [navigate]);
   const {
     value: companyName,
     didEdit: companyNameEdit,
@@ -127,12 +142,20 @@ const CompanyRegistrationForm: React.FC = () => {
         },
         position: "top-right",
       });
+      navigate("/admin/manage-teams", { replace: true });
       //navigate to manage teams page]
-      navigate("/admin/manage-teams");
+      // navigate("/admin/manage-teams");
     },
+    // onSettled: (data, error) => {
+    //   console.log("mutation settled:", { data, error });
+    //   if (data?.success && data.success == true && !error) {
+
+    //   }
+    // },
   });
 
-  const handleCreateAccount = () => {
+  const handleCreateAccount = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     handleCompanyBlur();
     handleCompanyLocationBlur();
     handleEmailBlur();

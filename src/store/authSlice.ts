@@ -15,9 +15,9 @@ const authSlice = createSlice({
     initialState: initialValue,
     reducers: {
         handleLogin: (state,action: PayloadAction<IhandleLoginPayload>)=>{
+            handleLocalStorageLogin(action.payload.token,action.payload.expirationTime)
             state.token = action.payload.token;
             state.expirationTime = action.payload.expirationTime;
-            handleLocalStorageLogin(action.payload.token,action.payload.expirationTime)
         },
         setName: (state,action : PayloadAction<{
             fullName: string;

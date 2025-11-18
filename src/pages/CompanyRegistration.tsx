@@ -1,5 +1,5 @@
-import CompanyRegistrationForm from "@/components/my-components/CompanyRegistrationForm"
-import CompanyRegistrationInfo from "@/components/my-components/CompanyRegistrationInfo"
+import CompanyRegistrationForm from "@/components/my-components/CompanyRegistrationForm";
+import CompanyRegistrationInfo from "@/components/my-components/CompanyRegistrationInfo";
 
 const CompanyRegistration: React.FC = () => {
   return (
@@ -15,7 +15,7 @@ const CompanyRegistration: React.FC = () => {
         <CompanyRegistrationInfo />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CompanyRegistration
+export default CompanyRegistration;

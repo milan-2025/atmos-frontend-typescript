@@ -43,3 +43,72 @@ export const handleLocalStorageLogout = ()=>{
     localStorage.removeItem("token");
     localStorage.removeItem("expirationTime");
 }
+
+let baseUrl = "http://localhost:3000"
+
+export const isLoggedIn = async () => {
+  const token = getTokenFromLocalStorage()
+  if (!token) {
+    // If no token exists, immediately redirect to login
+    // throw redirect("/login");
+    return false
+  }
+
+  if (isTokenExpired()) {
+    return false
+  }
+
+  try {
+    const response = await fetch(
+      `${baseUrl}/api/authentication/check-token`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    if (!response.ok) {
+      return false
+    }
+    return true
+  } catch (e) {
+    console.log("error while validating token---", e)
+    return false
+  }
+}
+
+export const isAdmin = async () =>{
+    const token = getTokenFromLocalStorage()
+    console.log('token',token)
+    if (!token) {
+    // If no token exists, immediately redirect to login
+    // throw redirect("/login");
+    return false
+    }
+
+    if (isTokenExpired()) {
+        return false
+    }
+    try {
+         const response = await fetch(
+      `${baseUrl}/api/authentication/check-admin`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    if (!response.ok) {
+      return false
+    }
+    return true
+    }
+    catch(e) {
+console.log("error while validating token---", e)
+    return false
+}
+}

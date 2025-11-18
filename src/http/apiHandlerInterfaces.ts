@@ -7,7 +7,7 @@ export interface ICreateCompany {
 }
 
 export interface IRegisterCompanySuccessResponse {
-    sucess: boolean,
+    success: boolean,
     message: string,
     token: string
 }
