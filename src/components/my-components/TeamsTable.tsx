@@ -16,12 +16,15 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
-import { ArrowBigLeft } from "lucide-react";
+import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
+import { useState } from "react";
 
 const TeamsTable: React.FC = () => {
   let token = useAppSelector((state) => state.auth.token);
+
+  const [page, setPage] = useState(1);
   let qParams: IGetTeamsParams = {
-    page: 1,
+    page: page,
     limit: 5,
   };
 
@@ -50,6 +53,30 @@ const TeamsTable: React.FC = () => {
     } else {
       return "Un assigned";
     }
+  };
+
+  const handlePrevious = () => {
+    if (page == 1) return;
+    setPage((oldState) => oldState - 1);
+  };
+
+  const handleNext = () => {
+    if (page == data?.noOfPages) return;
+    setPage((oldState) => oldState + 1);
+  };
+
+  const calculateLowerIndex = () => {
+    let lowerIndex = (page - 1) * 5 + 1;
+    return lowerIndex;
+  };
+
+  const calculateUpperIndex = () => {
+    let limit = 5;
+    let higherIndex = limit * page;
+    if (page == data?.noOfPages) {
+      higherIndex = data.totalTeams - limit * (page - 1);
+    }
+    return higherIndex;
   };
   return (
     <>
@@ -88,14 +115,28 @@ const TeamsTable: React.FC = () => {
                 ))}
               </TableBody>
               <TableFooter className="bg-blue-400/20">
-                <TableRow className="p-4">
+                <TableRow>
                   <TableCell className="text-gray-200 p-4">
-                    Showing 1-5 of total 15 teams
+                    Showing {calculateLowerIndex()}-{calculateUpperIndex()} of
+                    total {data.totalTeams} teams
                   </TableCell>
-                  <TableCell colSpan={3} className="text-right p-4">
-                    <Button className="bg-black">
-                      <ArrowBigLeft /> Previous
-                    </Button>
+                  <TableCell colSpan={3} className="p-4">
+                    <div className="flex flex-row justify-end items-center space-x-3">
+                      <Button
+                        disabled={page == 1}
+                        onClick={handlePrevious}
+                        className="bg-blend-darken hover:bg-black"
+                      >
+                        <ArrowBigLeft /> Previous
+                      </Button>
+                      <Button
+                        disabled={page == data.noOfPages}
+                        onClick={handleNext}
+                        className="bg-emerald-400 hover:bg-emerald-400/70"
+                      >
+                        Next <ArrowBigRight />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               </TableFooter>
