@@ -31,13 +31,13 @@ function App() {
         // 1. Check if the user is logged in
         if (await isLoggedIn()) {
           if (await isAdmin()) {
-            if (pathname === "/" || pathname === "/login") {
+            if (pathname === "/") {
               return redirect("/admin/manage-teams", {
                 replace: true,
               } as ResponseInit);
             }
           } else {
-            if (pathname === "/" || pathname === "/login") {
+            if (pathname === "/") {
               return redirect("/employee-dashboard", {
                 replace: true,
               } as ResponseInit);
@@ -58,6 +58,21 @@ function App() {
         {
           path: "/login",
           element: <Login />,
+          loader: async () => {
+            if (await isLoggedIn()) {
+              // If a user manually types /login but is already logged in:
+              // You can decide the default behavior here.
+              // if (await isAdmin()) {
+              //   return redirect("/admin/manage-teams", {
+              //     replace: true,
+              //   } as ResponseInit);
+              // }
+              return redirect("/employee-dashboard", {
+                replace: true,
+              } as ResponseInit);
+            }
+            return null;
+          },
           // No loader needed here anymore
         },
         {

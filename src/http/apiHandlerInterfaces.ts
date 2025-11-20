@@ -11,3 +11,14 @@ export interface IRegisterCompanySuccessResponse {
     message: string,
     token: string
 }
+
+export interface ICreateTeamSussesResponse {
+    success: boolean,
+    message: string
+}
+
+export interface ILoginSuccessResponse {
+    success: boolean,
+    token: string,
+    flow: string
+}
