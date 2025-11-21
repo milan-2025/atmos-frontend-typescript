@@ -16,6 +16,13 @@ export interface ICreateTeamModalProps {
   handleClose: () => void;
 }
 
+export interface IAddMemberModalProps {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+  handleClose: () => void;
+  team: ITeam;
+}
+
 export interface IMyTextareaProps extends React.ComponentProps<"textarea"> {
   title?: string;
   id: string;
@@ -51,4 +58,8 @@ export interface IgetTeamSuccessResponse {
   teams: ITeam[];
   totalTeams: number;
   noOfPages: number;
+}
+
+export interface IAddMemberButtonProps {
+  team: ITeam;
 }

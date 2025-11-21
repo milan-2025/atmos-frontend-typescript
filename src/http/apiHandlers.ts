@@ -1,5 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import type {
+  IAddMemberData,
+  IAddMemberSuccess,
   ICreateCompany,
   ICreateTeamSussesResponse,
   ILoginSuccessResponse,
@@ -147,5 +149,35 @@ export const getTeamsHandler = async ({
 
   let data: IgetTeamSuccessResponse = await response.json();
 
+  return data;
+};
+
+export const addMemberHandler = async (addMemberData: IAddMemberData) => {
+  const token = getTokenFromLocalStorage();
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while Adding Member No token found."
+    );
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error;
+  }
+  const response = await fetch(`${baseURL}/api/admin/add-member`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(addMemberData),
+  });
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error while adding member");
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  let data: IAddMemberSuccess = await response.json();
   return data;
 };

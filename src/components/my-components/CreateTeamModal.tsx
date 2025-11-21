@@ -14,7 +14,7 @@ import useInputValidation from "@/hooks/useInputValidation";
 import { isNotEmpty } from "@/helpers/validation";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { createTeamHandler } from "@/http/apiHandlers";
+import { createTeamHandler, queryClient } from "@/http/apiHandlers";
 import { toast } from "sonner";
 import LoadingScreen from "./LoadingScreen";
 
@@ -38,22 +38,34 @@ const CreateTeamNModal: React.FC<ICreateTeamModalProps> = ({
   const [teamDescription, setTeamDescription] = useState("");
 
   const [serverFieldError, setServerFieldErrors] = useState<any>({});
+  const [invalidatingQuery, setInvalidatingQuery] = useState(false);
   const { mutate, isError, error, isPending, reset } = useMutation({
     mutationFn: createTeamHandler,
     retry: false,
     onSuccess: (data) => {
       console.log("team created successfully", data);
+      setInvalidatingQuery(true);
+      queryClient
+        .invalidateQueries({
+          queryKey: ["teams-members"],
+        })
+        .then(() => {
+          setInvalidatingQuery(false);
+
+          setTeamName("");
+          setTeamDescription("");
+          setServerFieldErrors({});
+
+          toast.success("Team Created!!", {
+            classNames: {
+              toast: "!bg-green-500 !text-gray-100 !border-0",
+            },
+            position: "top-right",
+          });
+          setIsOpen(false);
+        });
       // close the modal
       //   setIsOpen
-      setTeamName("");
-      setTeamDescription("");
-      setServerFieldErrors({});
-      toast.success("Team Created!!", {
-        classNames: {
-          toast: "!bg-green-500 !text-gray-100 !border-0",
-        },
-        position: "top-right",
-      });
       //   setIsOpen(false);
     },
   });
@@ -114,7 +126,7 @@ const CreateTeamNModal: React.FC<ICreateTeamModalProps> = ({
 
   return (
     <>
-      {isPending && <LoadingScreen />}
+      {(isPending || invalidatingQuery) && <LoadingScreen />}
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogContent
           onEscapeKeyDown={(e) => {
