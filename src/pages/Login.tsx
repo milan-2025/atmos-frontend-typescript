@@ -1,16 +1,16 @@
-import LoadingScreen from "@/components/my-components/LoadingScreen";
-import MyInput from "@/components/my-components/MyInput";
-import { Button } from "@/components/ui/button";
-import { isNotEmpty, isValidEmail } from "@/helpers/validation";
-import useAppDispatch from "@/hooks/useAppDispatch";
-import useInputValidation from "@/hooks/useInputValidation";
-import { loginHandler } from "@/http/apiHandlers";
-import { handleLogin } from "@/store/authSlice";
-import { useMutation } from "@tanstack/react-query";
-import { Eye, EyeOff, LogIn, UserCircle2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
-import { toast } from "sonner";
+import LoadingScreen from "@/components/my-components/LoadingScreen"
+import MyInput from "@/components/my-components/MyInput"
+import { Button } from "@/components/ui/button"
+import { isNotEmpty, isValidEmail } from "@/helpers/validation"
+import useAppDispatch from "@/hooks/useAppDispatch"
+import useInputValidation from "@/hooks/useInputValidation"
+import { loginHandler } from "@/http/apiHandlers"
+import { handleLogin } from "@/store/authSlice"
+import { useMutation } from "@tanstack/react-query"
+import { Eye, EyeOff, LogIn, UserCircle2 } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router"
+import { toast } from "sonner"
 
 const Login: React.FC = () => {
   const {
@@ -22,11 +22,11 @@ const Login: React.FC = () => {
     handleFocus: emailFocus,
   } = useInputValidation("", () => {
     if (isNotEmpty(email).chk) {
-      return isValidEmail(email);
+      return isValidEmail(email)
     } else {
-      return isNotEmpty(email);
+      return isNotEmpty(email)
     }
-  });
+  })
 
   const {
     value: password,
@@ -36,70 +36,78 @@ const Login: React.FC = () => {
     error: passwordError,
     handleFocus: passwordFocus,
   } = useInputValidation("", () => {
-    return isNotEmpty(password);
-  });
+    return isNotEmpty(password)
+  })
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [formisDisabled, setFormisDisabled] = useState(false);
-  const [serverFieldError, setServerFieldErrors] = useState<any>({});
+  const [showPassword, setShowPassword] = useState(false)
+  const [formisDisabled, setFormisDisabled] = useState(false)
+  const [serverFieldError, setServerFieldErrors] = useState<any>({})
 
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const { mutate, isPending, isError, error, reset } = useMutation({
     mutationFn: loginHandler,
     retry: false,
     onSuccess: (data) => {
-      console.log("data after sign up", data);
+      console.log("data after sign up", data)
       if (data.flow == "NORMAL_LOGIN") {
         dispatch(
           handleLogin({
             token: data.token,
             expirationTime: new Date().getTime() + 9 * 60 * 60 * 1000,
           })
-        );
+        )
         toast.success("Logged In", {
           classNames: {
             toast: "!bg-green-500 !text-gray-100 !border-0",
           },
           position: "top-right",
-        });
-        navigate("/employee-dashboard", { replace: true });
+        })
+        navigate("/employee-dashboard", { replace: true })
+      }
+      if (data.flow == "SET_PASSWORD") {
+        localStorage.setItem("specialToken", data.token)
+        localStorage.setItem(
+          "specialTokenExpiry",
+          (new Date().getTime() + 15 * 60 * 1000).toString()
+        )
+        navigate("/set-password", { replace: true })
       }
     },
-  });
+  })
 
   const toggleShowPassword = () => {
-    setShowPassword((olsState) => !olsState);
-  };
+    setShowPassword((olsState) => !olsState)
+  }
 
   const loginBlur = () => {
-    handleEmailBlur();
-    handlePasswordBlur();
-  };
+    handleEmailBlur()
+    handlePasswordBlur()
+  }
 
   const loginClicked = () => {
     if (formisDisabled) {
-      return;
+      return
     }
 
     if (
       (EmailError && !EmailError.chk) ||
       (passwordError && !passwordError.chk)
     ) {
-      return;
+      return
     }
 
-    console.log("now we can login", { email, password });
-    mutate({ email: email.trim(), password: password.trim() });
-  };
+    console.log("now we can login", { email, password })
+    mutate({ email: email.trim(), password: password.trim() })
+  }
 
   if (isError) {
     //@ts-ignore
     if (error.info) {
       //@ts-ignore
 
-      setServerFieldErrors(error.info.errors);
+      setServerFieldErrors(error.info.errors)
       //@ts-ignore
       if (error.info.errors.error) {
         toast.error("Some error occurred", {
@@ -107,27 +115,27 @@ const Login: React.FC = () => {
             toast: "!bg-red-400 !text-gray-100 !border-0",
           },
           position: "top-right",
-        });
+        })
       }
     } else {
-      console.log("error during registring company-", error);
+      console.log("error during registring company-", error)
       toast.error("some error occurred", {
         classNames: {
           toast: "!bg-red-400 !text-gray-100 !border-0",
         },
         position: "top-right",
-      });
+      })
     }
-    reset();
+    reset()
   }
 
   useEffect(() => {
     if (emailDidEdit && passwordDidEdit) {
-      setFormisDisabled(false);
+      setFormisDisabled(false)
     } else {
-      setFormisDisabled(true);
+      setFormisDisabled(true)
     }
-  }, [emailDidEdit, passwordDidEdit]);
+  }, [emailDidEdit, passwordDidEdit])
   return (
     <>
       {isPending && <LoadingScreen />}
@@ -157,14 +165,14 @@ const Login: React.FC = () => {
                   value={email}
                   onFocus={emailFocus}
                   onChange={(e) => {
-                    handleEmailChange(e);
+                    handleEmailChange(e)
                     setServerFieldErrors((oldState: any) => {
-                      let newState = { ...oldState };
+                      let newState = { ...oldState }
                       if (newState.hasOwnProperty("email")) {
-                        delete newState.email;
+                        delete newState.email
                       }
-                      return newState;
-                    });
+                      return newState
+                    })
                   }}
                   onBlur={handleEmailBlur}
                   autoComplete="new-email"
@@ -189,14 +197,14 @@ const Login: React.FC = () => {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => {
-                  handlePasswordChange(e);
+                  handlePasswordChange(e)
                   setServerFieldErrors((oldState: any) => {
-                    let newState = { ...oldState };
+                    let newState = { ...oldState }
                     if (newState.hasOwnProperty("password")) {
-                      delete newState.password;
+                      delete newState.password
                     }
-                    return newState;
-                  });
+                    return newState
+                  })
                 }}
                 onFocus={passwordFocus}
                 onBlur={handlePasswordBlur}
@@ -231,8 +239,8 @@ const Login: React.FC = () => {
             )}
             <Button
               onClick={() => {
-                loginBlur();
-                loginClicked();
+                loginBlur()
+                loginClicked()
               }}
               // disabled={formisDisabled}
               className="bg-blue-400 rounded-3xl p-4 hover:bg-blue-400/75 text-white w-full cursor-pointer mt-5"
@@ -252,7 +260,7 @@ const Login: React.FC = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
