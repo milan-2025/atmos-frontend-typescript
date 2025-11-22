@@ -1,6 +1,6 @@
-import { Textarea } from "../ui/textarea";
-import { Label } from "@radix-ui/react-label";
-import type { IMyTextareaProps } from "./componentsinerfaces";
+import { Textarea } from "../ui/textarea"
+import { Label } from "@radix-ui/react-label"
+import type { IMyTextareaProps } from "./componentsinerfaces"
 
 const MyTextarea: React.FC<IMyTextareaProps> = ({
   title,
@@ -17,15 +17,15 @@ const MyTextarea: React.FC<IMyTextareaProps> = ({
         {title}
       </Label>
       <Textarea
-        className=" text-gray-300 w-full rounded-lg mt-2 h-[2.5em] pb-0.5 px-3 text-[1rem] bg-[#1f2937]/90 transition duration-150 ease-in-out
+        className=" text-gray-300 w-full rounded-lg mt-2  pb-0.5 px-3 text-[1rem] bg-[#1f2937]/90 transition duration-150 ease-in-out
   focus:outline-none 
     focus:ring-2
     focus:ring-gray-200/50 
     focus:border-gray-400;"
         id={id}
         //   title="Team Description (optional)"
+        // rows={80}
         {...props}
-        //   rows={4}
       />
       {helperText && (
         <span className="text-gray-400 pl-1.5 mt-1.5 text-sm">
@@ -33,7 +33,7 @@ const MyTextarea: React.FC<IMyTextareaProps> = ({
         </span>
       )}
     </>
-  );
-};
+  )
+}
 
-export default MyTextarea;
+export default MyTextarea

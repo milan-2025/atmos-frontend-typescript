@@ -1,18 +1,18 @@
-import { Plus } from "lucide-react";
-import { Button } from "../ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import AddMemberModal from "./AddMemeberModal";
-import { useState } from "react";
-import type { IAddMemberButtonProps } from "./componentsinerfaces";
+import { Cross } from "lucide-react"
+import { Button } from "../ui/button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
+import AddMemberModal from "./AddMemeberModal"
+import { useState } from "react"
+import type { IAddMemberButtonProps } from "./componentsinerfaces"
 
 const AddMember: React.FC<IAddMemberButtonProps> = ({ team }) => {
-  const [openAddMemberModal, setOpenAddMemberModal] = useState(false);
+  const [openAddMemberModal, setOpenAddMemberModal] = useState(false)
   const handleOpen = () => {
-    setOpenAddMemberModal(true);
-  };
+    setOpenAddMemberModal(true)
+  }
   const handleClose = () => {
-    setOpenAddMemberModal(false);
-  };
+    setOpenAddMemberModal(false)
+  }
   return (
     <>
       <Tooltip>
@@ -22,7 +22,7 @@ const AddMember: React.FC<IAddMemberButtonProps> = ({ team }) => {
             size={"icon"}
             className="bg-emerald-400 hover:bg-emerald-400/70 text-black font-bold cursor-pointer rounded-2xl"
           >
-            <Plus className="size-5" />
+            <Cross className="size-5" />
           </Button>
         </TooltipTrigger>
         <TooltipContent>
@@ -36,7 +36,7 @@ const AddMember: React.FC<IAddMemberButtonProps> = ({ team }) => {
         team={team}
       />
     </>
-  );
-};
+  )
+}
 
-export default AddMember;
+export default AddMember
