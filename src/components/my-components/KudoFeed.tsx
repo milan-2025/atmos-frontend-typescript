@@ -1,7 +1,14 @@
 import { Heart, User2 } from "lucide-react"
 import { Button } from "../ui/button"
 
-const KudoFeed: React.FC = () => {
+interface IKudo {
+  _id: string
+  from: string
+  to: string
+  message: string
+  createdAt: string
+}
+const KudoFeed: React.FC<{ kudo: IKudo }> = ({ kudo }) => {
   return (
     <>
       <div
@@ -14,14 +21,14 @@ const KudoFeed: React.FC = () => {
             className="flex flex-row w-full text-stone-200"
           >
             <User2 />
-            milansinghdav@gmail.com, to
+            {kudo.from}, to
           </div>
           <div
             id="to-user-info"
             className="flex flex-row w-full mt-1 text-stone-200"
           >
             <User2 />
-            milandeepbhalla@outlook.com
+            {kudo.to}
           </div>
         </div>
 
@@ -29,8 +36,7 @@ const KudoFeed: React.FC = () => {
           id="kudo-message"
           className="bg-primary p-2 rounded-lg mt-2 w-full text-justify text-stone-300"
         >
-          Some message to thank a particular person it can be any thing. ..
-          .slnjda ndkj.dedmedjd, dejnedn , em denje kemdkem
+          {kudo.message}
         </div>
 
         <div
@@ -44,7 +50,9 @@ const KudoFeed: React.FC = () => {
             <Heart className="text-rose-500 " /> 5
           </Button>
 
-          <span className="text-stone-300">21st Nov, 7:30pm</span>
+          <span className="text-stone-300">
+            {new Date(kudo.createdAt).toDateString()}
+          </span>
         </div>
       </div>
     </>

@@ -1,9 +1,9 @@
-import KudoFeed from "@/components/my-components/KudoFeed"
-import MyInput from "@/components/my-components/MyInput"
-import MyRadioBarButton from "@/components/my-components/MyRadioBarButton"
-import MyTextarea from "@/components/my-components/MyTextarea"
+// import KudoFeed from "@/components/my-components/KudoFeed"
+import KudoLiveFeed from "@/components/my-components/KudoLiveFeed"
+import SendKudoComponent from "@/components/my-components/SendKudoComponent"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
+// import { ScrollArea } from "@/components/ui/scroll-area"
+
 import {
   // CandlestickChart,
   // Cross,
@@ -11,13 +11,11 @@ import {
   HeartPulse,
   PartyPopper,
   // Send,
-  SendHorizonal,
-  X,
 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+// import { data } from "react-router"
 
 const EmployeeDashboard: React.FC = () => {
-  const [visibility, setSelectedVisibility] = useState("Public")
   const ref = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState(0)
   useEffect(() => {
@@ -27,7 +25,7 @@ const EmployeeDashboard: React.FC = () => {
       setHeight(measuredH)
     }
   }, [])
-  let arr = [1, 2, 3, 4, 5, 6, 7]
+
   return (
     <div
       id="employee-dashboard-outer-container"
@@ -109,67 +107,7 @@ const EmployeeDashboard: React.FC = () => {
 
             {/* // kudo sending form below */}
 
-            <div className="bg-blue-400/20 rounded-xl md:p-6 p-5 flex-col">
-              <div className="text-lg  text-gray-200 font-medium">
-                Send a Kudo
-              </div>
-              <div className="mt-4 md:pl-2">
-                <MyInput
-                  id="to"
-                  title="To:"
-                  placeholder="eg. milansinghdav@gmail.com"
-                  helperText="Enter email of your collegue."
-                />
-              </div>
-              <div className="mt-2 md:pl-2">
-                <MyTextarea
-                  id="message"
-                  title="Your Message:"
-                  placeholder="write your message..."
-                  style={{
-                    height: "7.5em",
-                  }}
-                />
-              </div>
-
-              <div className="mt-2 md:pl-2">
-                <div className="text-gray-300 text-sm[1.3em] pl-0.5 font-medium">
-                  Visibility:
-                </div>
-
-                <div
-                  id="visibility-radio-group"
-                  className="flex md:flex-row flex-col w-full gap-4 mt-3"
-                >
-                  <MyRadioBarButton
-                    title="Public"
-                    text="Your kudo's identity will be visible to all team members."
-                    isSelected={visibility == "Public"}
-                    onClick={() => {
-                      setSelectedVisibility("Public")
-                    }}
-                  />
-                  <MyRadioBarButton
-                    title="Private"
-                    text="Add an anonymous Kudo only you and receiver knows who sent the kudo."
-                    isSelected={visibility == "Private"}
-                    onClick={() => {
-                      setSelectedVisibility("Private")
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="mt-5 flex flex-row justify-end gap-2">
-                <Button className="bg-red-400 hover:bg-red-400/75 ring-0 focus-visible:ring-0 cursor-pointer text-accent">
-                  Cancel
-                  <X />
-                </Button>
-                <Button className="bg-emerald-400 hover:bg-emerald-400/75 ring-0 focus-visible:ring-0 cursor-pointer text-secondary-foreground">
-                  Send Kudo <SendHorizonal />
-                </Button>
-              </div>
-            </div>
+            <SendKudoComponent />
           </div>
           <div
             id="righ-panel"
@@ -179,24 +117,7 @@ const EmployeeDashboard: React.FC = () => {
             }}
           >
             {/* Live kudos below */}
-
-            <div
-              id="live-kudo-container"
-              className="bg-blue-400/20 p-4 flex flex-col w-full  rounded-xl"
-            >
-              <div className="text-gray-200 text-xl font-medium">
-                Live Kudo Feed
-              </div>
-              <ScrollArea
-                style={{
-                  height: height > 0 ? `${height - 60}px` : "auto",
-                }}
-              >
-                {arr.map((item) => {
-                  return <KudoFeed key={item} />
-                })}
-              </ScrollArea>
-            </div>
+            <KudoLiveFeed height={height} />
           </div>
         </div>
       </div>

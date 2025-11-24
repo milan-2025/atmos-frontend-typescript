@@ -18,13 +18,17 @@ const useInputValidation = (initialValue: string, validationFn: any) => {
     setError(result)
   }
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setDidEdit(true)
     setValue(e.target.value)
     // let result = validationFn()
     // setError(result)
   }
-  const handleFocus = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFocus = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setTimeout(() => {
       const autofilledValue = e.target.value
       if (autofilledValue) {
