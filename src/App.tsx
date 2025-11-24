@@ -25,9 +25,8 @@ function App() {
     {
       path: "/",
       element: <RootLayout />,
-      // ➡️ The Parent Loader now checks the current path before redirecting
+
       loader: async ({ request }) => {
-        // Get the current path (e.g., '/', '/login', '/admin/manage-teams')
         const pathname = new URL(request.url).pathname
 
         // 1. Check if the user is logged in
@@ -130,10 +129,12 @@ function App() {
     if (getTokenFromLocalStorage() && !isTokenExpired() && !auth.token) {
       let localToken = getTokenFromLocalStorage()
       let expirationTime = getExpirationTimeFromLocalStorage()
+      let name = localStorage.getItem("name")
       dispatch(
         handleLogin({
           token: localToken as string,
           expirationTime: expirationTime as number,
+          name: name as string,
         })
       )
     }

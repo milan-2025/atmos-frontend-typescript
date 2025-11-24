@@ -2,6 +2,7 @@
 import KudoLiveFeed from "@/components/my-components/KudoLiveFeed"
 import SendKudoComponent from "@/components/my-components/SendKudoComponent"
 import { Button } from "@/components/ui/button"
+import useAppSelector from "@/hooks/useAppSelector"
 // import { ScrollArea } from "@/components/ui/scroll-area"
 
 import {
@@ -13,11 +14,12 @@ import {
   // Send,
 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
-// import { data } from "react-router"
 
 const EmployeeDashboard: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState(0)
+
+  const name = useAppSelector((state) => state.auth.fullName)
   useEffect(() => {
     console.log("ref--", ref)
     if (ref.current) {
@@ -36,9 +38,9 @@ const EmployeeDashboard: React.FC = () => {
         className="flex flex-col w-10/12 mb-11"
       >
         <div id="intro-upper-row" className="flex flex-col w-full">
-          <h1 className="md:text-2xl text-xl  text-gray-200 font-medium">
-            Hello Milan
-          </h1>
+          <h1 className="md:text-2xl text-xl  text-gray-200 font-medium">{`Hello ${
+            name?.split(" ")[0]
+          }`}</h1>
           <div className="text-sm[1em] mt-1 text-gray-400">
             Here is a summary of your activity today.
           </div>

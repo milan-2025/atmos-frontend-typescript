@@ -1,9 +1,11 @@
 export const handleLocalStorageLogin = (
   token: string,
-  expirtionTime: number
+  expirtionTime: number,
+  name: string
 ) => {
   localStorage.setItem("token", token)
   localStorage.setItem("expirationTime", expirtionTime.toString())
+  localStorage.setItem("name", name)
 }
 
 export const getTokenFromLocalStorage = () => {
@@ -44,6 +46,7 @@ export const getRemainingExpirationTime = () => {
 export const handleLocalStorageLogout = () => {
   localStorage.removeItem("token")
   localStorage.removeItem("expirationTime")
+  localStorage.removeItem("name")
 }
 
 let baseUrl = "http://localhost:3000"

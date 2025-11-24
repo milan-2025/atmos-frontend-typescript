@@ -1,10 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import NoTeamsToShow from "./NoTeamsToShow";
-import type { IGetTeamsParams, ITeam } from "./componentsinerfaces";
-import { getTeamsHandler } from "@/http/apiHandlers";
-import { toast } from "sonner";
-import LoadingScreen from "./LoadingScreen";
-import useAppSelector from "@/hooks/useAppSelector";
+import { useQuery } from "@tanstack/react-query"
+import NoTeamsToShow from "./NoTeamsToShow"
+import type {
+  IGetTeamsParams,
+  ITeam,
+} from "../../interfaces/componentsinerfaces"
+import { getTeamsHandler } from "@/http/apiHandlers"
+import { toast } from "sonner"
+import LoadingScreen from "./LoadingScreen"
+import useAppSelector from "@/hooks/useAppSelector"
 import {
   Table,
   TableBody,
@@ -14,73 +17,73 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import { Button } from "../ui/button";
-import { ArrowBigLeft, ArrowBigRight, ShieldCheck } from "lucide-react";
-import { useState } from "react";
-import { Tooltip, TooltipContent } from "../ui/tooltip";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
-import AddMember from "./AddMember";
+} from "../ui/table"
+import { Button } from "../ui/button"
+import { ArrowBigLeft, ArrowBigRight, ShieldCheck } from "lucide-react"
+import { useState } from "react"
+import { Tooltip, TooltipContent } from "../ui/tooltip"
+import { TooltipTrigger } from "@radix-ui/react-tooltip"
+import AddMember from "./AddMember"
 
 const TeamsTable: React.FC = () => {
-  let token = useAppSelector((state) => state.auth.token);
+  let token = useAppSelector((state) => state.auth.token)
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1)
   let qParams: IGetTeamsParams = {
     page: page,
     limit: 5,
-  };
+  }
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["teams-members", qParams, token],
     queryFn: getTeamsHandler,
-  });
+  })
 
   if (isError) {
-    console.log("error", error.message);
+    console.log("error", error.message)
     toast.error("Some error occurred", {
       classNames: {
         toast: "!bg-red-400 !text-gray-100 !border-0",
       },
       position: "top-right",
-    });
+    })
   }
 
   if (data) {
-    console.log("data after retrivel:-", data);
+    console.log("data after retrivel:-", data)
   }
 
   const getManagerName = (team: ITeam) => {
     if (team.hasOwnProperty("managerId")) {
-      return team.managerId.fullName;
+      return team.managerId.fullName
     } else {
-      return "Un assigned";
+      return "Un assigned"
     }
-  };
+  }
 
   const handlePrevious = () => {
-    if (page == 1) return;
-    setPage((oldState) => oldState - 1);
-  };
+    if (page == 1) return
+    setPage((oldState) => oldState - 1)
+  }
 
   const handleNext = () => {
-    if (page == data?.noOfPages) return;
-    setPage((oldState) => oldState + 1);
-  };
+    if (page == data?.noOfPages) return
+    setPage((oldState) => oldState + 1)
+  }
 
   const calculateLowerIndex = () => {
-    let lowerIndex = (page - 1) * 5 + 1;
-    return lowerIndex;
-  };
+    let lowerIndex = (page - 1) * 5 + 1
+    return lowerIndex
+  }
 
   const calculateUpperIndex = () => {
-    let limit = 5;
-    let higherIndex = limit * page;
+    let limit = 5
+    let higherIndex = limit * page
     if (page == data?.noOfPages) {
-      higherIndex = data.totalTeams;
+      higherIndex = data.totalTeams
     }
-    return higherIndex;
-  };
+    return higherIndex
+  }
   return (
     <>
       {isLoading && <LoadingScreen />}
@@ -165,7 +168,7 @@ const TeamsTable: React.FC = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default TeamsTable;
+export default TeamsTable

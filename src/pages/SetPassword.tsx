@@ -73,6 +73,7 @@ const SetPassword: React.FC = () => {
         handleLogin({
           token: data.token,
           expirationTime: new Date().getTime() + 9 * 60 * 60 * 1000,
+          name: data.name,
         })
       )
       toast.success("Logged In", {

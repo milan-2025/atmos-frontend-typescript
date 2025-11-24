@@ -1,6 +1,6 @@
 import { Textarea } from "../ui/textarea"
 import { Label } from "@radix-ui/react-label"
-import type { IMyTextareaProps } from "./componentsinerfaces"
+import type { IMyTextareaProps } from "../../interfaces/componentsinerfaces"
 
 const MyTextarea: React.FC<IMyTextareaProps> = ({
   title,

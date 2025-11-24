@@ -4,33 +4,35 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import type { IMyDrawerProps } from "./componentsinerfaces";
-import { LogIn, LogOut, Milestone, User2, Users2 } from "lucide-react";
-import { Button } from "../ui/button";
-import useAppSelector from "@/hooks/useAppSelector";
-import MyNavLink from "./MyNavLink";
-import useAppDispatch from "@/hooks/useAppDispatch";
-import { handleLogout } from "@/store/authSlice";
-import { handleLocalStorageLogout } from "@/helpers/authentication";
-import { useNavigate } from "react-router";
+} from "@/components/ui/sheet"
+import type { IMyDrawerProps } from "../../interfaces/componentsinerfaces"
+import { LogIn, LogOut, Milestone, User2, Users2 } from "lucide-react"
+import { Button } from "../ui/button"
+import useAppSelector from "@/hooks/useAppSelector"
+import MyNavLink from "./MyNavLink"
+import useAppDispatch from "@/hooks/useAppDispatch"
+import { handleLogout } from "@/store/authSlice"
+import { handleLocalStorageLogout } from "@/helpers/authentication"
+import { useNavigate } from "react-router"
 
 const MyDrawer: React.FC<IMyDrawerProps> = ({
   isOpen,
   setIsOpen,
   handleclose,
 }) => {
-  const auth = useAppSelector((state) => state.auth);
+  const auth = useAppSelector((state) => state.auth)
 
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const logoutHandler = () => {
-    handleLocalStorageLogout();
-    dispatch(handleLogout());
-    navigate("/login", { replace: true });
-  };
+    handleLocalStorageLogout()
+    dispatch(handleLogout())
+    navigate("/login", { replace: true })
+  }
+
+  const name = useAppSelector((state) => state.auth.fullName)
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -57,10 +59,18 @@ const MyDrawer: React.FC<IMyDrawerProps> = ({
 
           {auth.token && (
             <>
-              <div className="flex w-10/12 flex-row font-bold cursor-pointer hover:bg-blue-400/10 hover:rounded-lg hover:text-blue-400 py-1.5 ml-4 pr-5 pl-3">
+              {/* <div className="flex w-10/12 flex-row font-bold cursor-pointer hover:bg-blue-400/10 hover:rounded-lg hover:text-blue-400 py-1.5 ml-4 pr-5 pl-3">
                 <User2 className="pr-1 w-8 h-8 align-top justify-self-start" />{" "}
-                <div className="flex items-center">Hello Milan</div>
-              </div>
+                <div className="flex items-center">
+                  Hello {name?.split(" ")[0]}
+                </div>
+              </div> */}
+
+              <MyNavLink
+                to="/employee-dashboard"
+                label={`Hello ${name?.split(" ")[0]}`}
+                Icon={User2}
+              />
 
               <MyNavLink
                 to="/admin/manage-teams"
@@ -82,7 +92,7 @@ const MyDrawer: React.FC<IMyDrawerProps> = ({
         </div>
       </SheetContent>
     </Sheet>
-  );
-};
+  )
+}
 
-export default MyDrawer;
+export default MyDrawer

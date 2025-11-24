@@ -3,7 +3,7 @@ import { Button } from "../ui/button"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import AddMemberModal from "./AddMemeberModal"
 import { useState } from "react"
-import type { IAddMemberButtonProps } from "./componentsinerfaces"
+import type { IAddMemberButtonProps } from "../../interfaces/componentsinerfaces"
 
 const AddMember: React.FC<IAddMemberButtonProps> = ({ team }) => {
   const [openAddMemberModal, setOpenAddMemberModal] = useState(false)

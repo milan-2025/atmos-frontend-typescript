@@ -10,6 +10,7 @@ export interface IRegisterCompanySuccessResponse {
   success: boolean
   message: string
   token: string
+  name: string
 }
 
 export interface ICreateTeamSussesResponse {
@@ -21,6 +22,7 @@ export interface ILoginSuccessResponse {
   success: boolean
   token: string
   flow: string
+  name: string
 }
 
 export interface IAddMemberData {
@@ -44,4 +46,5 @@ export interface ISetPasswordResponse {
   success: boolean
   message: string
   token: string
+  name: string
 }

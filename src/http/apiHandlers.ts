@@ -8,13 +8,13 @@ import type {
   IRegisterCompanySuccessResponse,
   ISetPasswordData,
   ISetPasswordResponse,
-} from "./apiHandlerInterfaces"
+} from "../interfaces/apiHandlerInterfaces"
 import type {
   ICreateTeam,
   IGetTeamsParams,
   IgetTeamSuccessResponse,
   IloginFormProps,
-} from "@/components/my-components/componentsinerfaces"
+} from "@/interfaces/componentsinerfaces"
 import { getTokenFromLocalStorage } from "@/helpers/authentication"
 
 const baseURL = "http://localhost:3000"

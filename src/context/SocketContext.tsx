@@ -33,7 +33,6 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     const newSocket: SocketType = io("http://localhost:3000", {
-      //   withCredentials: true, // Important if using cookies/sessions
       transports: ["websocket"],
     })
 

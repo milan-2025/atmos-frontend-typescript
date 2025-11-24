@@ -5,17 +5,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import type { IAddMemberModalProps } from "./componentsinerfaces";
-import MyInput from "./MyInput";
-import useInputValidation from "@/hooks/useInputValidation";
-import { isNotEmpty, isValidEmail } from "@/helpers/validation";
-import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { addMemberHandler, queryClient } from "@/http/apiHandlers";
-import { toast } from "sonner";
-import LoadingScreen from "./LoadingScreen";
+} from "@/components/ui/dialog"
+import type { IAddMemberModalProps } from "../../interfaces/componentsinerfaces"
+import MyInput from "./MyInput"
+import useInputValidation from "@/hooks/useInputValidation"
+import { isNotEmpty, isValidEmail } from "@/helpers/validation"
+import { Button } from "../ui/button"
+import { useEffect, useState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { addMemberHandler, queryClient } from "@/http/apiHandlers"
+import { toast } from "sonner"
+import LoadingScreen from "./LoadingScreen"
 
 const AddMemberModal: React.FC<IAddMemberModalProps> = ({
   isOpen,
@@ -33,8 +33,8 @@ const AddMemberModal: React.FC<IAddMemberModalProps> = ({
     handleFocus: handleNameFocus,
     handleOnChange: handleNameChange,
   } = useInputValidation("", () => {
-    return isNotEmpty(fullName);
-  });
+    return isNotEmpty(fullName)
+  })
 
   const {
     value: email,
@@ -47,11 +47,11 @@ const AddMemberModal: React.FC<IAddMemberModalProps> = ({
     handleOnChange: handleEmailChange,
   } = useInputValidation("", () => {
     if (isNotEmpty(email).chk) {
-      return isValidEmail(email);
+      return isValidEmail(email)
     } else {
-      return isNotEmpty(email);
+      return isNotEmpty(email)
     }
-  });
+  })
 
   const handleOnChange = (newState: boolean) => {
     if (!newState) {
@@ -59,71 +59,71 @@ const AddMemberModal: React.FC<IAddMemberModalProps> = ({
       //   setFullName("");
       //   setEmail("");
       //   setServerFieldErrors({});
-      handleCancel();
+      handleCancel()
     }
-    setIsOpen(newState);
-  };
+    setIsOpen(newState)
+  }
 
-  const [queryInvalidating, setQueryInvalidating] = useState(false);
+  const [queryInvalidating, setQueryInvalidating] = useState(false)
 
   const { mutate, isPending, isError, error, reset } = useMutation({
     mutationFn: addMemberHandler,
     onSuccess: (data) => {
-      console.log("data after add memeber", data);
-      setQueryInvalidating(true);
+      console.log("data after add memeber", data)
+      setQueryInvalidating(true)
       queryClient
         .invalidateQueries({
           queryKey: ["teams-members"],
         })
         .then(() => {
-          setQueryInvalidating(false);
+          setQueryInvalidating(false)
 
           toast.success("Member Added", {
             classNames: {
               toast: "!bg-green-500 !text-gray-100 !border-0",
             },
             position: "top-right",
-          });
-          handleCancel();
-        });
+          })
+          handleCancel()
+        })
     },
-  });
+  })
 
   const handleAdd = () => {
-    handleNameBlur();
-    handleEmailBlur();
+    handleNameBlur()
+    handleEmailBlur()
 
     if (formIsDisabled) {
-      return;
+      return
     }
 
     if (
       (nameHasError && !nameHasError.chk) ||
       (emailHasError && !emailHasError.chk)
     ) {
-      return;
+      return
     }
 
     console.log("now can add member", {
       fullName: fullName.trim(),
       email: email.trim(),
-    });
+    })
 
     mutate({
       fullName: fullName.trim(),
       email: email.trim(),
       teamId: team._id,
       teamName: team.teamName,
-    });
-  };
+    })
+  }
 
-  const [serverFieldError, setServerFieldErrors] = useState<any>({});
+  const [serverFieldError, setServerFieldErrors] = useState<any>({})
   if (isError) {
     //@ts-ignore
     if (error.info) {
       //@ts-ignore
 
-      setServerFieldErrors(error.info.errors);
+      setServerFieldErrors(error.info.errors)
       //@ts-ignore
       if (error.info.errors.error) {
         toast.error("Some error occurred", {
@@ -131,48 +131,48 @@ const AddMemberModal: React.FC<IAddMemberModalProps> = ({
             toast: "!bg-red-400 !text-gray-100 !border-0",
           },
           position: "top-right",
-        });
+        })
       }
     } else {
-      console.log("error during registring company-", error);
+      console.log("error during registring company-", error)
       toast.error("some error occurred", {
         classNames: {
           toast: "!bg-red-400 !text-gray-100 !border-0",
         },
         position: "top-right",
-      });
+      })
     }
-    reset();
+    reset()
   }
 
   const handleCancel = () => {
-    setFullName("");
-    setEmail("");
-    seNameDidEdit(false);
-    setEmailDidEdit(false);
+    setFullName("")
+    setEmail("")
+    seNameDidEdit(false)
+    setEmailDidEdit(false)
 
-    handleClose();
-  };
+    handleClose()
+  }
 
-  const [formIsDisabled, setFormIsDisabled] = useState(true);
+  const [formIsDisabled, setFormIsDisabled] = useState(true)
 
   useEffect(() => {
     if (nameDidEdit && emailDidEdit) {
-      setFormIsDisabled(false);
+      setFormIsDisabled(false)
     } else {
-      setFormIsDisabled(true);
+      setFormIsDisabled(true)
     }
-  }, [nameDidEdit, emailDidEdit]);
+  }, [nameDidEdit, emailDidEdit])
   return (
     <>
       {(isPending || queryInvalidating) && <LoadingScreen />}
       <Dialog open={isOpen} onOpenChange={handleOnChange}>
         <DialogContent
           onEscapeKeyDown={(e) => {
-            e.preventDefault();
+            e.preventDefault()
           }}
           onPointerDownOutside={(e) => {
-            e.preventDefault();
+            e.preventDefault()
           }}
           className="sm:max-w-[425px] bg-[#141E27] text-gray-100"
         >
@@ -251,7 +251,7 @@ const AddMemberModal: React.FC<IAddMemberModalProps> = ({
         </DialogContent>
       </Dialog>
     </>
-  );
-};
+  )
+}
 
-export default AddMemberModal;
+export default AddMemberModal

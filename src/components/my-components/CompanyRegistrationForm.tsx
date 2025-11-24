@@ -1,39 +1,39 @@
-import { Button } from "@/components/ui/button";
-import MyInput from "./MyInput";
-import { Eye, EyeOff } from "lucide-react";
-import useInputValidation from "@/hooks/useInputValidation";
+import { Button } from "@/components/ui/button"
+import MyInput from "./MyInput"
+import { Eye, EyeOff } from "lucide-react"
+import useInputValidation from "@/hooks/useInputValidation"
 import {
   doConfimPasswordMatch,
   isNotEmpty,
   isValidEmail,
   isValidPassword,
-} from "@/helpers/validation";
-import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { registerCompanyHandler } from "@/http/apiHandlers";
-import type { ICreateCompany } from "@/http/apiHandlerInterfaces";
-import { toast } from "sonner";
-import useAppDispatch from "@/hooks/useAppDispatch";
-import { handleLogin } from "@/store/authSlice";
-import { useNavigate } from "react-router";
-import { isAdmin, isLoggedIn } from "@/helpers/authentication";
+} from "@/helpers/validation"
+import { useEffect, useState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { registerCompanyHandler } from "@/http/apiHandlers"
+import type { ICreateCompany } from "@/interfaces/apiHandlerInterfaces"
+import { toast } from "sonner"
+import useAppDispatch from "@/hooks/useAppDispatch"
+import { handleLogin } from "@/store/authSlice"
+import { useNavigate } from "react-router"
+import { isAdmin, isLoggedIn } from "@/helpers/authentication"
 
 const CompanyRegistrationForm: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   useEffect(() => {
     async function checkAuth() {
       // This is the synchronous check that fires immediately upon component render
       if (await isLoggedIn()) {
         if (await isAdmin()) {
           // Use navigate with { replace: true } to enforce the history replacement
-          navigate("/admin/manage-teams", { replace: true });
+          navigate("/admin/manage-teams", { replace: true })
         } else {
-          navigate("/employee-dashboard", { replace: true });
+          navigate("/employee-dashboard", { replace: true })
         }
       }
     }
-    checkAuth();
-  }, [navigate]);
+    checkAuth()
+  }, [navigate])
   const {
     value: companyName,
     didEdit: companyNameEdit,
@@ -42,8 +42,8 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: companyFocus,
     error: companyError,
   } = useInputValidation("", () => {
-    return isNotEmpty(companyName);
-  });
+    return isNotEmpty(companyName)
+  })
 
   const {
     value: companyLocation,
@@ -53,8 +53,8 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: companyLocationFocus,
     error: companyLocationError,
   } = useInputValidation("", () => {
-    return isNotEmpty(companyLocation);
-  });
+    return isNotEmpty(companyLocation)
+  })
 
   const {
     value: fullName,
@@ -64,8 +64,8 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: fullNameFocus,
     error: fullNameError,
   } = useInputValidation("", () => {
-    return isNotEmpty(fullName);
-  });
+    return isNotEmpty(fullName)
+  })
 
   const {
     value: email,
@@ -76,11 +76,11 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: emailFocus,
   } = useInputValidation("", () => {
     if (isNotEmpty(email).chk) {
-      return isValidEmail(email);
+      return isValidEmail(email)
     } else {
-      return isNotEmpty(email);
+      return isNotEmpty(email)
     }
-  });
+  })
 
   const {
     value: password,
@@ -91,11 +91,11 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: passwordFocus,
   } = useInputValidation("", () => {
     if (isNotEmpty(password).chk) {
-      return isValidPassword(password);
+      return isValidPassword(password)
     } else {
-      return isNotEmpty(password);
+      return isNotEmpty(password)
     }
-  });
+  })
 
   const {
     value: confirmPassword,
@@ -106,43 +106,44 @@ const CompanyRegistrationForm: React.FC = () => {
     handleFocus: confirmPasswordFocus,
   } = useInputValidation("", () => {
     if (isNotEmpty(confirmPassword).chk) {
-      return doConfimPasswordMatch(confirmPassword, password);
+      return doConfimPasswordMatch(confirmPassword, password)
     } else {
-      return isNotEmpty(confirmPassword);
+      return isNotEmpty(confirmPassword)
     }
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formisDisabled, setFormisDisabled] = useState(true);
-  const [serverFieldError, setServerFieldErrors] = useState<any>({});
+  })
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [formisDisabled, setFormisDisabled] = useState(true)
+  const [serverFieldError, setServerFieldErrors] = useState<any>({})
 
   const toggleShowPassword = () => {
-    setShowPassword((oldValue) => !oldValue);
-  };
+    setShowPassword((oldValue) => !oldValue)
+  }
   const toggleShowConfirmPassword = () => {
-    setShowConfirmPassword((oldValue) => !oldValue);
-  };
+    setShowConfirmPassword((oldValue) => !oldValue)
+  }
 
   // tanstack query code to handle mutation
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
   const { mutate, isPending, isError, error, reset } = useMutation({
     mutationFn: registerCompanyHandler,
     retry: false,
     onSuccess: (data) => {
-      console.log("after register company:-", data.message);
+      console.log("after register company:-", data.message)
       dispatch(
         handleLogin({
           token: data.token,
           expirationTime: new Date().getTime() + 9 * 60 * 60 * 1000, // 9 hours expiration time
+          name: data.name,
         })
-      );
+      )
       toast.success("Company Registered", {
         classNames: {
           toast: "!bg-green-500 !text-gray-100 !border-0",
         },
         position: "top-right",
-      });
-      navigate("/admin/manage-teams", { replace: true });
+      })
+      navigate("/admin/manage-teams", { replace: true })
       //navigate to manage teams page]
       // navigate("/admin/manage-teams");
     },
@@ -152,18 +153,18 @@ const CompanyRegistrationForm: React.FC = () => {
 
     //   }
     // },
-  });
+  })
 
   const handleCreateAccount = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    handleCompanyBlur();
-    handleCompanyLocationBlur();
-    handleEmailBlur();
-    handleconfirmPasswordBlur();
-    handlepasswordBlur();
-    handleFullNameBlur();
+    e.preventDefault()
+    handleCompanyBlur()
+    handleCompanyLocationBlur()
+    handleEmailBlur()
+    handleconfirmPasswordBlur()
+    handlepasswordBlur()
+    handleFullNameBlur()
     if (formisDisabled) {
-      return;
+      return
     }
     if (
       (companyError && !companyError.chk) ||
@@ -173,7 +174,7 @@ const CompanyRegistrationForm: React.FC = () => {
       (confirmPasswordError && !confirmPasswordError.chk) ||
       (fullNameError && !fullNameError.chk)
     ) {
-      return;
+      return
     }
 
     let dataTosend: ICreateCompany = {
@@ -182,9 +183,9 @@ const CompanyRegistrationForm: React.FC = () => {
       fullName: fullName.trim(),
       adminEmail: email.trim(),
       password: password.trim(),
-    };
-    mutate(dataTosend);
-  };
+    }
+    mutate(dataTosend)
+  }
 
   // handling errors for mutaion
   if (isError) {
@@ -193,7 +194,7 @@ const CompanyRegistrationForm: React.FC = () => {
     if (error.info) {
       //@ts-ignore
 
-      setServerFieldErrors(error.info.errors);
+      setServerFieldErrors(error.info.errors)
       //@ts-ignore
       if (error.info.errors.error) {
         toast.error("Some error occurred", {
@@ -201,18 +202,18 @@ const CompanyRegistrationForm: React.FC = () => {
             toast: "!bg-red-400 !text-gray-100 !border-0",
           },
           position: "top-right",
-        });
+        })
       }
     } else {
-      console.log("error during registring company-", error);
+      console.log("error during registring company-", error)
       toast.error("some error occurred", {
         classNames: {
           toast: "!bg-red-400 !text-gray-100 !border-0",
         },
         position: "top-right",
-      });
+      })
     }
-    reset();
+    reset()
   }
   useEffect(() => {
     if (
@@ -223,9 +224,9 @@ const CompanyRegistrationForm: React.FC = () => {
       confirmPasswordEdit &&
       didFullNameEdit
     ) {
-      setFormisDisabled(false);
+      setFormisDisabled(false)
     } else {
-      setFormisDisabled(true);
+      setFormisDisabled(true)
     }
   }, [
     companyNameEdit,
@@ -234,7 +235,7 @@ const CompanyRegistrationForm: React.FC = () => {
     passwordEdit,
     confirmPasswordEdit,
     didFullNameEdit,
-  ]);
+  ])
   return (
     <div
       id="setup-form"
@@ -424,7 +425,7 @@ const CompanyRegistrationForm: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CompanyRegistrationForm;
+export default CompanyRegistrationForm
