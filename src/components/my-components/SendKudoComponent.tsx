@@ -191,7 +191,7 @@ const SendKudoComponent: React.FC = () => {
           >
             <MyRadioBarButton
               title="Public"
-              text="Your kudo's identity will be visible to all team members."
+              text="Your kudo's identity will be visible to all others."
               isSelected={visibility == "Public"}
               onClick={() => {
                 setSelectedVisibility("Public")
@@ -199,7 +199,7 @@ const SendKudoComponent: React.FC = () => {
             />
             <MyRadioBarButton
               title="Private"
-              text="Add an anonymous Kudo only you and receiver knows who sent the kudo."
+              text="Send an anonymous Kudo, kudo's identity will be invisible to all others."
               isSelected={visibility == "Private"}
               onClick={() => {
                 setSelectedVisibility("Private")

@@ -1,7 +1,7 @@
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
+  // SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
@@ -14,6 +14,7 @@ import useAppDispatch from "@/hooks/useAppDispatch"
 import { handleLogout } from "@/store/authSlice"
 import { handleLocalStorageLogout } from "@/helpers/authentication"
 import { useNavigate } from "react-router"
+import logo from "../../assets/logo.png"
 
 const MyDrawer: React.FC<IMyDrawerProps> = ({
   isOpen,
@@ -39,12 +40,15 @@ const MyDrawer: React.FC<IMyDrawerProps> = ({
       <SheetContent
         className="bg-[#18222C] border-b border-gray-400 gap-0 md:w-[21vw] text-gray-100"
         side="left"
+        aria-describedby="navbar"
       >
-        <SheetHeader>
+        <SheetHeader aria-describedby="navbar">
           <SheetTitle className="text-gray-200 text-xl  font-medium">
-            Atmos Logo
+            <img src={logo} className="w-40 h-11" />
           </SheetTitle>
-          <SheetDescription className="text-gray-200">@2025</SheetDescription>
+          {/* <SheetDescription className="text-gray-200 text-sm">
+            @2025
+          </SheetDescription> */}
         </SheetHeader>
         <div
           onClick={handleclose}
