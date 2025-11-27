@@ -48,3 +48,22 @@ export interface ISetPasswordResponse {
   token: string
   name: string
 }
+
+export interface ISuccessResponse {
+  success: boolean
+  message: string
+}
+
+export interface IPulseCheckData {
+  pulseResponse: string
+}
+
+export interface IWorkloadResponse {
+  _id: string
+  createdAt: string
+  pulseResponse: string
+}
+export interface IPulseChartSuccessResponse {
+  success: boolean
+  workloads: IWorkloadResponse[]
+}

@@ -1,7 +1,8 @@
 // import KudoFeed from "@/components/my-components/KudoFeed"
 import KudoLiveFeed from "@/components/my-components/KudoLiveFeed"
+import PulseCheckComponent from "@/components/my-components/PulseCheckComponent"
 import SendKudoComponent from "@/components/my-components/SendKudoComponent"
-import { Button } from "@/components/ui/button"
+// import { Button } from "@/components/ui/button"
 import useAppSelector from "@/hooks/useAppSelector"
 // import { ScrollArea } from "@/components/ui/scroll-area"
 
@@ -9,7 +10,7 @@ import {
   // CandlestickChart,
   // Cross,
   Goal,
-  HeartPulse,
+  // HeartPulse,
   PartyPopper,
   // Send,
 } from "lucide-react"
@@ -81,31 +82,8 @@ const EmployeeDashboard: React.FC = () => {
                 <div className="text-2xl">5 Days</div>
               </div>
             </div>
-
-            <div
-              id="pulse-check"
-              className="bg-blue-400/20 flex-col w-full p-6 rounded-xl"
-            >
-              <div className="flex flex-col md:flex-row  w-full">
-                <div className="text-lg  text-gray-300 font-medium">
-                  How are you feeling today?
-                </div>
-                <div className="mt-3 md:mt-0 md:ml-auto">
-                  <Button className="bg-emerald-400 hover:bg-emerald-400/75 ring-0 focus-visible:ring-0 cursor-pointer text-secondary-foreground">
-                    <HeartPulse /> Take Today's Pulse Check
-                  </Button>
-                </div>
-              </div>
-              <div className="md:mt-1 mt-3">
-                <div className="text-gray-400">Your Pulse Trend</div>
-                <div className="mt-0.5 text-2xl text-gray-200 font-medium">
-                  Feeling Great
-                </div>
-                <div className="text-gray-400 mt-0.5">
-                  Last 7 days<span className="text-emerald-400"> +5%</span>
-                </div>
-              </div>
-            </div>
+            {/* //pulse check component below */}
+            <PulseCheckComponent />
 
             {/* // kudo sending form below */}
 

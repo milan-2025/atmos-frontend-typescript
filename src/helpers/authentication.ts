@@ -1,3 +1,5 @@
+import links from "./links"
+
 export const handleLocalStorageLogin = (
   token: string,
   expirtionTime: number,
@@ -49,7 +51,7 @@ export const handleLocalStorageLogout = () => {
   localStorage.removeItem("name")
 }
 
-let baseUrl = "http://localhost:3000"
+let baseUrl = links.backendbaseUrlRemote
 
 export const isLoggedIn = async () => {
   const token = getTokenFromLocalStorage()

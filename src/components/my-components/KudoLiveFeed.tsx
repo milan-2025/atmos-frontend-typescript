@@ -5,12 +5,13 @@ import { getTokenFromLocalStorage } from "@/helpers/authentication"
 import { toast } from "sonner"
 import LoadingScreen from "./LoadingScreen"
 import { useSocket, type IKudo } from "@/context/SocketContext"
+import links from "@/helpers/links"
 
 const KudoLiveFeed: React.FC<{
   height: number
 }> = ({ height }) => {
   //   let arr = [1, 2, 3, 4, 5, 6, 7]
-
+  const backendurl = links.backendbaseUrlRemote
   const [isLoading, setIsLoading] = useState(false)
   const [kudos, setKudos] = useState<IKudo[]>([])
   useEffect(() => {
@@ -28,15 +29,12 @@ const KudoLiveFeed: React.FC<{
       })
     }
     setIsLoading(true)
-    const response = await fetch(
-      "http://localhost:3000/api/admin/kudos/get-kudos",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    const response = await fetch(`${backendurl}/api/admin/kudos/get-kudos`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
 
     setIsLoading(false)
 

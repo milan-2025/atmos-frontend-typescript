@@ -53,6 +53,15 @@ const AddMemberModal: React.FC<IAddMemberModalProps> = ({
     }
   })
 
+  const handleCancel = () => {
+    setFullName("")
+    setEmail("")
+    seNameDidEdit(false)
+    setEmailDidEdit(false)
+
+    handleClose()
+  }
+
   const handleOnChange = (newState: boolean) => {
     if (!newState) {
       // handleCancel()
@@ -143,15 +152,6 @@ const AddMemberModal: React.FC<IAddMemberModalProps> = ({
       })
     }
     reset()
-  }
-
-  const handleCancel = () => {
-    setFullName("")
-    setEmail("")
-    seNameDidEdit(false)
-    setEmailDidEdit(false)
-
-    handleClose()
   }
 
   const [formIsDisabled, setFormIsDisabled] = useState(true)

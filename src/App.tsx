@@ -19,6 +19,7 @@ import Login from "./pages/Login"
 import ManageTeams from "./pages/ManageTeams"
 import EmployeeDashboard from "./pages/EmployeeDasbhboard"
 import SetPassword from "./pages/SetPassword"
+import ManagerDashboard from "./pages/ManagerDashboard"
 
 function App() {
   const router = createBrowserRouter([
@@ -115,6 +116,18 @@ function App() {
               } as ResponseInit)
             }
           },
+        },
+        {
+          path: "/manager-dashboard",
+          element: <ManagerDashboard />,
+          // This loader now ONLY focuses on the IsLoggedIn check
+          // loader: async () => {
+          //   if (!(await isLoggedIn())) {
+          //     return redirect("/login", {
+          //       replace: true,
+          //     } as ResponseInit)
+          //   }
+          // },
         },
       ],
     },

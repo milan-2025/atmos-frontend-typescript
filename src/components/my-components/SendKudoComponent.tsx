@@ -10,6 +10,7 @@ import { toast } from "sonner"
 import { getTokenFromLocalStorage } from "@/helpers/authentication"
 
 import LoadingScreen from "./LoadingScreen"
+import links from "@/helpers/links"
 
 const SendKudoComponent: React.FC = () => {
   const {
@@ -73,21 +74,19 @@ const SendKudoComponent: React.FC = () => {
       })
     }
     setIsloading(true)
-    const response = await fetch(
-      "http://localhost:3000/api/admin/kudos/send-kudo",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          to: to.trim(),
-          message: message.trim(),
-          visibility,
-        }),
-      }
-    )
+    let backendUrl = links.backendbaseUrlRemote
+    const response = await fetch(`${backendUrl}/api/admin/kudos/send-kudo`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        to: to.trim(),
+        message: message.trim(),
+        visibility,
+      }),
+    })
     setIsloading(false)
     if (!response.ok) {
       let error: any = {}
@@ -121,6 +120,12 @@ const SendKudoComponent: React.FC = () => {
       setToEdit(false)
       setMessage("")
       setMessageEdit(false)
+      toast.success("Kudo Sent.", {
+        classNames: {
+          toast: "!bg-green-500 !text-gray-100 !border-0",
+        },
+        position: "top-right",
+      })
     }
   }
 

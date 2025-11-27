@@ -9,6 +9,7 @@ export interface IServerToClientEvents {
   kudo_added: (data: { kudoData: IKudo }) => void
 }
 
+import links from "@/helpers/links"
 import React, {
   createContext,
   useContext,
@@ -32,8 +33,10 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
   const [socket, setSocket] = useState<SocketType>(null)
 
   useEffect(() => {
-    const newSocket: SocketType = io("http://localhost:3000", {
-      transports: ["websocket"],
+    const newSocket: SocketType = io(links.backendbaseUrlRemote + "/", {
+      // transports: ["websocket"],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
     })
 
     setSocket(newSocket)

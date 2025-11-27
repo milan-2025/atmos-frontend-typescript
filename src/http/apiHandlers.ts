@@ -5,9 +5,12 @@ import type {
   ICreateCompany,
   ICreateTeamSussesResponse,
   ILoginSuccessResponse,
+  IPulseChartSuccessResponse,
+  IPulseCheckData,
   IRegisterCompanySuccessResponse,
   ISetPasswordData,
   ISetPasswordResponse,
+  ISuccessResponse,
 } from "../interfaces/apiHandlerInterfaces"
 import type {
   ICreateTeam,
@@ -16,8 +19,9 @@ import type {
   IloginFormProps,
 } from "@/interfaces/componentsinerfaces"
 import { getTokenFromLocalStorage } from "@/helpers/authentication"
+import links from "@/helpers/links"
 
-const baseURL = "http://localhost:3000"
+const baseURL = links.backendbaseUrlRemote
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -210,5 +214,115 @@ export const setPasswordHandler = async (setPasswordata: ISetPasswordData) => {
   }
 
   let data: ISetPasswordResponse = await response.json()
+  return data
+}
+
+export const checkcanAddPulse = async ({
+  signal,
+  queryKey,
+}: {
+  signal?: AbortSignal
+  queryKey: (string | null)[]
+}) => {
+  //get token
+  let token = queryKey[1]
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while creating team. No token found."
+    )
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error
+  }
+
+  // send response
+  const response = await fetch(baseURL + "/api/pulsecheck/can-add-pulse", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    signal: signal,
+  })
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error can't add to pulse")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data: ISuccessResponse = await response.json()
+
+  return data
+}
+
+export const submitPulseCheckHandler = async (
+  submitPulseCheckData: IPulseCheckData
+) => {
+  const token = getTokenFromLocalStorage()
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while Pulse Check No token found."
+    )
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error
+  }
+  const response = await fetch(`${baseURL}/api/pulsecheck/add-pulse`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(submitPulseCheckData),
+  })
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error while pulse check")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data: ISuccessResponse = await response.json()
+  return data
+}
+
+export const getPulseChartData = async ({
+  signal,
+  queryKey,
+}: {
+  signal?: AbortSignal
+  queryKey: (string | null)[]
+}) => {
+  //get token
+  let token = queryKey[2]
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while getting pulse chart. No token found."
+    )
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error
+  }
+
+  // send response
+  const response = await fetch(baseURL + "/api/pulsecheck/get-chart-data", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    signal: signal,
+  })
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error can't get pulse chart data")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data: IPulseChartSuccessResponse = await response.json()
+
   return data
 }
