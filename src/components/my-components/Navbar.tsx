@@ -7,6 +7,8 @@ import logo from "../../assets/logo.png"
 import { useSocket } from "@/context/SocketContext"
 import useAppSelector from "@/hooks/useAppSelector"
 import { MyAlert } from "./MyAlert"
+import useAppDispatch from "@/hooks/useAppDispatch"
+import { handleMemberJoined } from "@/store/qaMeetingSlice"
 // import { Button } from "../ui/button"
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -14,6 +16,8 @@ const Navbar: React.FC = () => {
   const handleOpen = () => setIsOpen(true)
   const handleclose = () => setIsOpen(false)
   const teamId = useAppSelector((state) => state.auth.teamID)
+
+  const dispatch = useAppDispatch()
 
   const socket = useSocket()
 
@@ -32,6 +36,13 @@ const Navbar: React.FC = () => {
       console.log("data from user joined", data)
       // show alert
       //   setIsMeetingAlertOpen(true)
+      dispatch(
+        handleMemberJoined({
+          email: data.email,
+          fullname: data.name,
+          // userId: data._id,
+        })
+      )
     }
     socket.on("user_joined_" + teamId, handleUserJoined)
 

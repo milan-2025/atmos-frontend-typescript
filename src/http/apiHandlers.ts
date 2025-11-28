@@ -20,6 +20,7 @@ import type {
 } from "@/interfaces/componentsinerfaces"
 import { getTokenFromLocalStorage } from "@/helpers/authentication"
 import links from "@/helpers/links"
+import type { IQuestion } from "@/interfaces/storeInterfaces"
 
 const baseURL = links.backendbaseUrlRemote
 
@@ -347,6 +348,76 @@ export const startMeetingHandler = async () => {
 
   if (!response.ok) {
     let error: Error | any = new Error("Error while starting live qa")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data: ISuccessResponse = await response.json()
+  return data
+}
+
+export const getLiveQaDataHandler = async ({
+  signal,
+  queryKey,
+}: {
+  signal?: AbortSignal
+  queryKey: (string | null)[]
+}) => {
+  //get token
+  let token = queryKey[1]
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while creating team. No token found."
+    )
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error
+  }
+
+  // send response
+  const response = await fetch(baseURL + "/api/meeting/get-live-qa-data", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    signal: signal,
+  })
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error can't get live data ")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data: any = await response.json()
+
+  return data
+}
+
+export const AskQuestionHandler = async (questionData: IQuestion) => {
+  const token = getTokenFromLocalStorage()
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while Pulse Check No token found."
+    )
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error
+  }
+
+  const response = await fetch(`${baseURL}/api/meeting/ask-question`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(questionData),
+  })
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error while asking question")
     error.code = response.status
     error.info = await response.json()
     throw error

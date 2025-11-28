@@ -63,3 +63,55 @@ export function isValidUserName(value: string): IsValid {
       "Username must start with a letter, can contain numbers, can only contain _ as special charecter (no spaces) and must be atleast 8 characters long.",
   }
 }
+
+/**
+ * Converts an ISO date string to a human-readable relative time string.
+ * @param isoDateString The ISO 8601 date string (e.g., "2023-10-27T10:00:00.000Z").
+ * @returns A string like "5 minutes ago", "3 hours ago", or "2 days ago".
+ */
+export function timeAgo(isoDateString: string): string {
+  // 1. Calculate the difference in milliseconds
+  const pastDate = new Date(isoDateString)
+  const now = new Date()
+  // Use Math.abs() to handle potential clock drift, though for "ago" it should be positive.
+  const diffInMilliseconds = now.getTime() - pastDate.getTime()
+
+  // 2. Define the time divisions in milliseconds
+  const MS_PER_SECOND = 1000
+  const MS_PER_MINUTE = 60 * MS_PER_SECOND
+  const MS_PER_HOUR = 60 * MS_PER_MINUTE
+  const MS_PER_DAY = 24 * MS_PER_HOUR
+  const MS_PER_WEEK = 7 * MS_PER_DAY
+  const MS_PER_MONTH = 30 * MS_PER_DAY // Approximate
+  const MS_PER_YEAR = 365 * MS_PER_DAY // Approximate
+
+  // 3. Determine the largest relevant unit
+
+  // Convert to absolute value for cleaner calculation and positive units
+  const diff = Math.abs(diffInMilliseconds)
+
+  // Array of units from largest to smallest for easy iteration
+  const units = [
+    { unit: MS_PER_YEAR, label: "year" },
+    { unit: MS_PER_MONTH, label: "month" },
+    { unit: MS_PER_WEEK, label: "week" },
+    { unit: MS_PER_DAY, label: "day" },
+    { unit: MS_PER_HOUR, label: "hour" },
+    { unit: MS_PER_MINUTE, label: "minute" },
+    { unit: MS_PER_SECOND, label: "second" },
+  ]
+
+  for (const { unit, label } of units) {
+    const value = Math.floor(diff / unit)
+
+    // If the value is 1 or more, this is the largest relevant unit
+    if (value >= 1) {
+      // Apply pluralization (e.g., "minute" vs "minutes")
+      const plural = value > 1 ? "s" : ""
+      return `${value} ${label}${plural} ago`
+    }
+  }
+
+  // Fallback for very small time differences (less than a second)
+  return "just now"
+}

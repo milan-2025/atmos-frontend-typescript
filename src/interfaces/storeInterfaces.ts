@@ -11,3 +11,20 @@ export interface IhandleLoginPayload {
   name: string
   teamId: string
 }
+
+export interface IQuestion {
+  question: string
+  upvotes: number
+  createdAt?: string
+}
+
+export interface IMember {
+  email: string
+  userId?: string
+  fullname: string
+}
+
+export interface IinitialQaMeetingValue {
+  members: IMember[]
+  questions: IQuestion[]
+}
