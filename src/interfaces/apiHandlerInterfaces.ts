@@ -11,6 +11,7 @@ export interface IRegisterCompanySuccessResponse {
   message: string
   token: string
   name: string
+  teamId: string
 }
 
 export interface ICreateTeamSussesResponse {
@@ -23,6 +24,7 @@ export interface ILoginSuccessResponse {
   token: string
   flow: string
   name: string
+  teamId: string
 }
 
 export interface IAddMemberData {

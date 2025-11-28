@@ -9,6 +9,7 @@ import {
   getRemainingExpirationTime,
   getTokenFromLocalStorage,
   isAdmin,
+  isAllowedInMeeting,
   isLoggedIn,
   isTokenExpired,
 } from "./helpers/authentication"
@@ -20,6 +21,7 @@ import ManageTeams from "./pages/ManageTeams"
 import EmployeeDashboard from "./pages/EmployeeDasbhboard"
 import SetPassword from "./pages/SetPassword"
 import ManagerDashboard from "./pages/ManagerDashboard"
+import QAMeeting from "./pages/QAMeeting"
 
 function App() {
   const router = createBrowserRouter([
@@ -129,6 +131,32 @@ function App() {
           //   }
           // },
         },
+        {
+          path: "/qa-meeting",
+          element: <QAMeeting />,
+          // This loader now ONLY focuses on the IsLoggedIn check
+          loader: async () => {
+            // if (!(await isLoggedIn())) {
+            //   return redirect("/login", {
+            //     replace: true,
+            //   } as ResponseInit)
+            // }
+            // else if (!(await isAllowedInMeeting())){
+
+            // }
+            if (await isLoggedIn()) {
+              if (!(await isAllowedInMeeting())) {
+                return redirect("/employee-dashboard", {
+                  replace: true,
+                } as ResponseInit)
+              }
+            } else {
+              return redirect("/login", {
+                replace: true,
+              } as ResponseInit)
+            }
+          },
+        },
       ],
     },
   ])
@@ -143,11 +171,13 @@ function App() {
       let localToken = getTokenFromLocalStorage()
       let expirationTime = getExpirationTimeFromLocalStorage()
       let name = localStorage.getItem("name")
+      let teamId = localStorage.getItem("teamId")
       dispatch(
         handleLogin({
           token: localToken as string,
           expirationTime: expirationTime as number,
           name: name as string,
+          teamId: teamId as string,
         })
       )
     }

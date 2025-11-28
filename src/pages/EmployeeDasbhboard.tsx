@@ -2,6 +2,7 @@
 import KudoLiveFeed from "@/components/my-components/KudoLiveFeed"
 import PulseCheckComponent from "@/components/my-components/PulseCheckComponent"
 import SendKudoComponent from "@/components/my-components/SendKudoComponent"
+// import { useSocket } from "@/context/SocketContext"
 // import { Button } from "@/components/ui/button"
 import useAppSelector from "@/hooks/useAppSelector"
 // import { ScrollArea } from "@/components/ui/scroll-area"

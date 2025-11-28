@@ -57,6 +57,7 @@ const Login: React.FC = () => {
             token: data.token,
             expirationTime: new Date().getTime() + 9 * 60 * 60 * 1000,
             name: data.name,
+            teamId: data.teamId,
           })
         )
         toast.success("Logged In", {

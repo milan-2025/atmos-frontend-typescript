@@ -3,11 +3,13 @@ import links from "./links"
 export const handleLocalStorageLogin = (
   token: string,
   expirtionTime: number,
-  name: string
+  name: string,
+  teamId: string
 ) => {
   localStorage.setItem("token", token)
   localStorage.setItem("expirationTime", expirtionTime.toString())
   localStorage.setItem("name", name)
+  localStorage.setItem("teamId", teamId)
 }
 
 export const getTokenFromLocalStorage = () => {
@@ -127,6 +129,48 @@ export const checkSpecialToken = async () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${specailToken}`,
         },
+      }
+    )
+    if (!response.ok) {
+      return false
+    }
+    return true
+  } catch (e) {
+    console.log("error while validating token---", e)
+    return false
+  }
+}
+
+export const isAllowedInMeeting = async () => {
+  const token = getTokenFromLocalStorage()
+  const teamId = localStorage.getItem("teamId")
+
+  if (!token) {
+    // If no token exists, immediately redirect to login
+    // throw redirect("/login");
+    return false
+  }
+
+  if (isTokenExpired()) {
+    return false
+  }
+
+  if (!teamId) {
+    return false
+  }
+
+  try {
+    const response = await fetch(
+      `${baseUrl}/api/authentication/check-qa-meeting`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ms: teamId,
+        }),
       }
     )
     if (!response.ok) {

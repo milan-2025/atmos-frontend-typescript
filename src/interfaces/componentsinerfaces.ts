@@ -78,6 +78,11 @@ export interface IPulseResponseButtonProps extends React.ComponentProps<"div"> {
   // text: string
 }
 
+export interface IMyAlertProps {
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
+}
+
 // export interface ICheckPulseModal extends IBasicModal {
 
 // }

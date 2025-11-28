@@ -326,3 +326,32 @@ export const getPulseChartData = async ({
 
   return data
 }
+
+export const startMeetingHandler = async () => {
+  const token = getTokenFromLocalStorage()
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while Pulse Check No token found."
+    )
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error
+  }
+  const response = await fetch(`${baseURL}/api/manager/start-live-qa`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error while starting live qa")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data: ISuccessResponse = await response.json()
+  return data
+}

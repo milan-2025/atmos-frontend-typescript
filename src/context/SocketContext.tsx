@@ -21,7 +21,7 @@ import { io, Socket } from "socket.io-client"
 // import { ServerToClientEvents, ClientToServerEvents } from "../types/socket";
 
 // Typed Socket Instance
-type SocketType = Socket<IServerToClientEvents> | null
+type SocketType = Socket | null
 
 const SocketContext = createContext<SocketType>(null)
 

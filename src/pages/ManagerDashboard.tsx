@@ -1,8 +1,34 @@
+import LoadingScreen from "@/components/my-components/LoadingScreen"
 import { Button } from "@/components/ui/button"
+import { startMeetingHandler } from "@/http/apiHandlers"
+import { useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 const ManagerDashboard: React.FC = () => {
+  const { mutate, isError, reset, isPending } = useMutation({
+    mutationFn: startMeetingHandler,
+    retry: false,
+    onSuccess: (data) => {
+      console.log("after meeting started data", data)
+    },
+  })
+
+  const handleStartMeet = () => {
+    mutate()
+  }
+
+  if (isError) {
+    toast.error("Some error occurred while starting meeting.", {
+      classNames: {
+        toast: "!bg-red-400 !text-gray-100 !border-0",
+      },
+      position: "top-right",
+    })
+    reset()
+  }
   return (
     <>
+      {isPending && <LoadingScreen />}
       <div
         id="manager-dashboard-outer-container"
         className="flex  w-full justify-center"
@@ -23,7 +49,10 @@ const ManagerDashboard: React.FC = () => {
               </div>
             </div>
             <div className="ml-auto">
-              <Button className="bg-emerald-400 hover:bg-emerald-400/75 ring-0 focus-visible:ring-0 cursor-pointer text-secondary-foreground">
+              <Button
+                onClick={handleStartMeet}
+                className="bg-emerald-400 hover:bg-emerald-400/75 ring-0 focus-visible:ring-0 cursor-pointer text-secondary-foreground"
+              >
                 Start Live Q/A Session
               </Button>
             </div>
