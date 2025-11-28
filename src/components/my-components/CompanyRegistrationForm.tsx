@@ -136,6 +136,7 @@ const CompanyRegistrationForm: React.FC = () => {
           expirationTime: new Date().getTime() + 9 * 60 * 60 * 1000, // 9 hours expiration time
           name: data.name,
           teamId: data.teamId,
+          email: data.email,
         })
       )
       toast.success("Company Registered", {

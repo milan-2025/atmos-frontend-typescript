@@ -3,6 +3,7 @@ export interface IinitialAuthValue {
   expirationTime: number | null
   fullName: string | null
   teamID: string | null
+  email: string | null
 }
 
 export interface IhandleLoginPayload {
@@ -10,6 +11,7 @@ export interface IhandleLoginPayload {
   expirationTime: number
   name: string
   teamId: string
+  email: string
 }
 
 export interface IQuestion {

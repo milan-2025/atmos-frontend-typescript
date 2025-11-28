@@ -9,6 +9,10 @@ import useAppSelector from "@/hooks/useAppSelector"
 import { MyAlert } from "./MyAlert"
 import useAppDispatch from "@/hooks/useAppDispatch"
 import { handleMemberJoined } from "@/store/qaMeetingSlice"
+import { useNavigate } from "react-router"
+import { useQuery } from "@tanstack/react-query"
+import { getLiveQaStatus } from "@/http/apiHandlers"
+import LoadingScreen from "./LoadingScreen"
 // import { Button } from "../ui/button"
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -16,8 +20,18 @@ const Navbar: React.FC = () => {
   const handleOpen = () => setIsOpen(true)
   const handleclose = () => setIsOpen(false)
   const teamId = useAppSelector((state) => state.auth.teamID)
+  const email = useAppSelector((state) => state.auth.email)
+  const token = useAppSelector((state) => state.auth.token)
 
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  const { isError, isLoading } = useQuery({
+    queryKey: ["qa-live-data", "qa-status", token],
+    queryFn: getLiveQaStatus,
+    retry: false,
+    staleTime: Infinity,
+  })
 
   const socket = useSocket()
 
@@ -27,7 +41,12 @@ const Navbar: React.FC = () => {
     const handleMeetingStarted = (data: any) => {
       console.log("data from meeting started", data)
       // show alert
-      setIsMeetingAlertOpen(true)
+      console.log("email-", email)
+      if (email == data.startedBy) {
+        navigate("/qa-meeting")
+      } else {
+        setIsMeetingAlertOpen(true)
+      }
     }
     console.log("meeting_started_" + teamId)
     socket.on("meeting_started_" + teamId, handleMeetingStarted)
@@ -54,6 +73,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
+      {isLoading && <LoadingScreen />}
       <nav
         id="navbar"
         className="flex pl-3 flex-row w-full py-1 border-b items-center border-gray-400"
@@ -70,9 +90,16 @@ const Navbar: React.FC = () => {
         <div className="flex  flex-row w-full md:justify-center pl-1 md:pl-1">
           <div className="flex w-10/12 md:ml-[-5em] items-center flex-row text-gray-200 font-medium p-0">
             <img src={logo} alt="logo" className="w-40 h-11" />
-            <div className="ml-auto  flex flex-row items-center text-red-500 gap-1 cursor-pointer">
-              <Radio className=" size-5 mt-0.5" /> Live QA
-            </div>
+            {token && !isError && (
+              <div
+                onClick={() => {
+                  navigate("/qa-meeting")
+                }}
+                className="ml-auto  flex flex-row items-center text-red-500 gap-1 cursor-pointer"
+              >
+                <Radio className=" size-5 mt-0.5" /> Live QA
+              </div>
+            )}
           </div>
         </div>
       </nav>

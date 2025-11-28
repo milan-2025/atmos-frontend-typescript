@@ -34,13 +34,14 @@ const QAMeeting: React.FC = () => {
   if (data) {
     console.log("data from live qa-", data)
 
-    meetingmembers = data.existingMeeting.members.map((user: any) => {
-      return {
-        email: user.email,
-        userId: user._id,
-        fullname: user.fullName,
-      }
-    })
+    if (data)
+      meetingmembers = data.existingMeeting.members.map((user: any) => {
+        return {
+          email: user.email,
+          userId: user._id,
+          fullname: user.fullName,
+        }
+      })
   }
 
   if (isError) {
@@ -232,7 +233,7 @@ const QAMeeting: React.FC = () => {
                               </div>
                             </div>
                             <div className="text-gray-400 ml-auto">
-                              -Asked {timeAgo(question.createdAt as string)}
+                              Asked {timeAgo(question.createdAt as string)}
                             </div>
                           </div>
                         )

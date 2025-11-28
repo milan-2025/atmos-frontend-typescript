@@ -172,12 +172,14 @@ function App() {
       let expirationTime = getExpirationTimeFromLocalStorage()
       let name = localStorage.getItem("name")
       let teamId = localStorage.getItem("teamId")
+      let email = localStorage.getItem("email")
       dispatch(
         handleLogin({
           token: localToken as string,
           expirationTime: expirationTime as number,
           name: name as string,
           teamId: teamId as string,
+          email: email as string,
         })
       )
     }

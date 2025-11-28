@@ -4,12 +4,14 @@ export const handleLocalStorageLogin = (
   token: string,
   expirtionTime: number,
   name: string,
-  teamId: string
+  teamId: string,
+  email: string
 ) => {
   localStorage.setItem("token", token)
   localStorage.setItem("expirationTime", expirtionTime.toString())
   localStorage.setItem("name", name)
   localStorage.setItem("teamId", teamId)
+  localStorage.setItem("email", email)
 }
 
 export const getTokenFromLocalStorage = () => {
@@ -51,6 +53,8 @@ export const handleLocalStorageLogout = () => {
   localStorage.removeItem("token")
   localStorage.removeItem("expirationTime")
   localStorage.removeItem("name")
+  localStorage.removeItem("teamId")
+  localStorage.removeItem("email")
 }
 
 let baseUrl = links.backendbaseUrlRemote
