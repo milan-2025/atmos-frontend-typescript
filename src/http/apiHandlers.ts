@@ -465,3 +465,34 @@ export const getLiveQaStatus = async ({
 
   return data
 }
+
+export const AssignManagerHandler = async (assignManagerData: any) => {
+  const token = getTokenFromLocalStorage()
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while Pulse Check No token found."
+    )
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error
+  }
+
+  const response = await fetch(`${baseURL}/api/admin/assign-manager`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(assignManagerData),
+  })
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error while assigning manager")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data: any = await response.json()
+  return data
+}

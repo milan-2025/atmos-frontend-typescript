@@ -24,6 +24,7 @@ import { useState } from "react"
 import { Tooltip, TooltipContent } from "../ui/tooltip"
 import { TooltipTrigger } from "@radix-ui/react-tooltip"
 import AddMember from "./AddMember"
+import AssignManager from "./AssignManager"
 
 const TeamsTable: React.FC = () => {
   let token = useAppSelector((state) => state.auth.token)
@@ -119,19 +120,7 @@ const TeamsTable: React.FC = () => {
                     <TableCell className="text-gray-200 p-2">
                       <div className="flex flex-row items-center space-x-4">
                         <AddMember team={team} />
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              size={"icon"}
-                              className="bg-blue-400 hover:bg-blue-400/70 text-white font-bold cursor-pointer rounded-2xl"
-                            >
-                              <ShieldCheck className="size-6" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Assign Manager</p>
-                          </TooltipContent>
-                        </Tooltip>
+                        <AssignManager team={team} />
                       </div>
                     </TableCell>
                   </TableRow>
