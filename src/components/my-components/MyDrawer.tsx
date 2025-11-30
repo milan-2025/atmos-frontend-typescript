@@ -108,7 +108,7 @@ const MyDrawer: React.FC<IMyDrawerProps> = ({
                   className="bg-blue-400 focus-visible:ring-0 hover:bg-blue-400/70 w-full cursor-pointer"
                 >
                   <LogOut className="w-8 h-8" />
-                  Logout-test
+                  Logout
                 </Button>
               </div>
             </>
