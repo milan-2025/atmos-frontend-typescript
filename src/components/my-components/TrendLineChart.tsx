@@ -57,6 +57,7 @@ export function TrendLineChart() {
         _id: workload._id,
       }
     })
+    chartData = chartData.reverse()
   }
   if (isError) {
     //@ts-ignore

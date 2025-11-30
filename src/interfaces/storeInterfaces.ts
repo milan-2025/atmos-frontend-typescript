@@ -4,6 +4,7 @@ export interface IinitialAuthValue {
   fullName: string | null
   teamID: string | null
   email: string | null
+  role: string[] | null
 }
 
 export interface IhandleLoginPayload {
@@ -12,6 +13,7 @@ export interface IhandleLoginPayload {
   name: string
   teamId: string
   email: string
+  role: string[]
 }
 
 export interface IQuestion {

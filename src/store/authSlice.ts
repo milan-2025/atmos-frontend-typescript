@@ -16,6 +16,7 @@ const initialValue: IinitialAuthValue = {
   fullName: null,
   teamID: null,
   email: null,
+  role: null,
 }
 
 const authSlice = createSlice({
@@ -28,13 +29,15 @@ const authSlice = createSlice({
         action.payload.expirationTime,
         action.payload.name,
         action.payload.teamId,
-        action.payload.email
+        action.payload.email,
+        action.payload.role
       )
       state.token = action.payload.token
       state.fullName = action.payload.name
       state.expirationTime = action.payload.expirationTime
       state.teamID = action.payload.teamId
       state.email = action.payload.email
+      state.role = action.payload.role
     },
     setName: (
       state,

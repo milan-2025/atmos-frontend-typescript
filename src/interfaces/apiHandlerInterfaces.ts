@@ -13,6 +13,7 @@ export interface IRegisterCompanySuccessResponse {
   name: string
   teamId: string
   email: string
+  role: string[]
 }
 
 export interface ICreateTeamSussesResponse {
@@ -27,6 +28,7 @@ export interface ILoginSuccessResponse {
   name: string
   teamId: string
   email: string
+  role: string[]
 }
 
 export interface IAddMemberData {
@@ -51,6 +53,9 @@ export interface ISetPasswordResponse {
   message: string
   token: string
   name: string
+  teamId: string
+  email: string
+  role: string[]
 }
 
 export interface ISuccessResponse {

@@ -43,12 +43,12 @@ const KudoFeed: React.FC<{ kudo: IKudo }> = ({ kudo }) => {
           id="footer"
           className="flex flex-row w-full mt-3 justify-between items-center"
         >
-          <Button
+          {/* <Button
             // size={"icon"}
             className="text-rose-500 bg-rose-500/20 rounded-2xl hover:bg-rose-500/40 cursor-pointer"
           >
             <Heart className="text-rose-500 " /> 5
-          </Button>
+          </Button> */}
 
           <span className="text-stone-300">
             {new Date(kudo.createdAt).toDateString()}

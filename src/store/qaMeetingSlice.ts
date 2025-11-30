@@ -81,6 +81,9 @@ const qaMeetingSlice = createSlice({
       }
       return newState
     },
+    handleOnReset: () => {
+      return initialValue
+    },
     // handleSetQuestions: (state,action:PayloadAction<{questions:IQuestion[]}>)=>{
     //     let
     // }
@@ -92,6 +95,7 @@ export const {
   handleMemberLeft,
   handleQuestionAsked,
   handleSetOnRefresh,
+  handleOnReset,
 } = qaMeetingSlice.actions
 
 export default qaMeetingSlice

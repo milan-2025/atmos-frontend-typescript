@@ -69,12 +69,12 @@ const PulseCheckComponent: React.FC = () => {
         </div>
         <div className="md:mt-1 mt-3">
           <div className="text-gray-400">Your Pulse Trend</div>
-          <div className="mt-0.5 text-2xl text-gray-200 font-medium">
+          {/* <div className="mt-0.5 text-2xl text-gray-200 font-medium">
             Feeling Great
           </div>
           <div className="text-gray-400 mt-0.5">
             Last 7 days<span className="text-emerald-400"> +5%</span>
-          </div>
+          </div> */}
           <TrendLineChart />
         </div>
       </div>

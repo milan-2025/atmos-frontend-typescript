@@ -8,10 +8,10 @@ import { useSocket } from "@/context/SocketContext"
 import useAppSelector from "@/hooks/useAppSelector"
 import { MyAlert } from "./MyAlert"
 import useAppDispatch from "@/hooks/useAppDispatch"
-import { handleMemberJoined } from "@/store/qaMeetingSlice"
+import { handleMemberJoined, handleOnReset } from "@/store/qaMeetingSlice"
 import { useNavigate } from "react-router"
 import { useQuery } from "@tanstack/react-query"
-import { getLiveQaStatus } from "@/http/apiHandlers"
+import { getLiveQaStatus, queryClient } from "@/http/apiHandlers"
 import LoadingScreen from "./LoadingScreen"
 // import { Button } from "../ui/button"
 const Navbar: React.FC = () => {
@@ -27,29 +27,56 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate()
 
   const { isError, isLoading } = useQuery({
-    queryKey: ["qa-live-data", "qa-status", token],
+    queryKey: ["qa-status", token],
     queryFn: getLiveQaStatus,
     retry: false,
-    staleTime: Infinity,
+    staleTime: 0,
   })
 
   const socket = useSocket()
-
+  // const location = useLocation()
+  const [invalidationQueries, setInvalidatingQueries] = useState(false)
   useEffect(() => {
     if (!socket) return
 
     const handleMeetingStarted = (data: any) => {
       console.log("data from meeting started", data)
+      queryClient
+        .invalidateQueries({
+          queryKey: ["qa-status"],
+        })
+        .then(() => {
+          console.log("email-", email)
+          if (email == data.startedBy) {
+            navigate("/qa-meeting")
+          } else {
+            setIsMeetingAlertOpen(true)
+          }
+        })
       // show alert
-      console.log("email-", email)
-      if (email == data.startedBy) {
-        navigate("/qa-meeting")
-      } else {
-        setIsMeetingAlertOpen(true)
-      }
+    }
+
+    const handleMeetingEnded = () => {
+      setInvalidatingQueries(true)
+      queryClient
+        .invalidateQueries({
+          queryKey: ["qa-status"],
+        })
+        .then(() => {
+          setInvalidatingQueries(false)
+          dispatch(handleOnReset())
+          console.log("location--", location.pathname)
+          if (window.location.pathname == "/qa-meeting") {
+            navigate("/meeting-ended", {
+              replace: true,
+            })
+          }
+        })
     }
     console.log("meeting_started_" + teamId)
     socket.on("meeting_started_" + teamId, handleMeetingStarted)
+
+    socket.on("meeting_ended_" + teamId, handleMeetingEnded)
 
     const handleUserJoined = (data: any) => {
       console.log("data from user joined", data)
@@ -68,12 +95,13 @@ const Navbar: React.FC = () => {
     return () => {
       socket.off("meeting_started_" + teamId, handleMeetingStarted)
       socket.off("user_joined_" + teamId, handleUserJoined)
+      socket.off("meeting_ended_" + teamId, handleMeetingEnded)
     }
   }, [socket])
 
   return (
     <>
-      {isLoading && <LoadingScreen />}
+      {(isLoading || invalidationQueries) && <LoadingScreen />}
       <nav
         id="navbar"
         className="flex pl-3 flex-row w-full py-1 border-b items-center border-gray-400"

@@ -137,6 +137,7 @@ const CompanyRegistrationForm: React.FC = () => {
           name: data.name,
           teamId: data.teamId,
           email: data.email,
+          role: data.role,
         })
       )
       toast.success("Company Registered", {

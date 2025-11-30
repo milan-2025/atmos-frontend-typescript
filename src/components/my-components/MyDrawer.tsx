@@ -6,7 +6,14 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import type { IMyDrawerProps } from "../../interfaces/componentsinerfaces"
-import { LogIn, LogOut, Milestone, User2, Users2 } from "lucide-react"
+import {
+  LayoutDashboard,
+  LogIn,
+  LogOut,
+  Milestone,
+  User2,
+  Users2,
+} from "lucide-react"
 import { Button } from "../ui/button"
 import useAppSelector from "@/hooks/useAppSelector"
 import MyNavLink from "./MyNavLink"
@@ -34,6 +41,9 @@ const MyDrawer: React.FC<IMyDrawerProps> = ({
   }
 
   const name = useAppSelector((state) => state.auth.fullName)
+  const role = useAppSelector((state) => state.auth.role)
+
+  console.log("role", role)
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -76,11 +86,21 @@ const MyDrawer: React.FC<IMyDrawerProps> = ({
                 Icon={User2}
               />
 
-              <MyNavLink
-                to="/admin/manage-teams"
-                label="Manage Teams"
-                Icon={Users2}
-              />
+              {role?.includes("admin") && (
+                <MyNavLink
+                  to="/admin/manage-teams"
+                  label="Manage Teams"
+                  Icon={Users2}
+                />
+              )}
+
+              {role?.includes("manager") && (
+                <MyNavLink
+                  to="/manager-dashboard"
+                  label="Manager Dashboard"
+                  Icon={LayoutDashboard}
+                />
+              )}
 
               <div className="flex w-10/12 ml-4 mt-4">
                 <Button

@@ -59,6 +59,7 @@ const Login: React.FC = () => {
             name: data.name,
             teamId: data.teamId,
             email: data.email,
+            role: data.role,
           })
         )
         toast.success("Logged In", {

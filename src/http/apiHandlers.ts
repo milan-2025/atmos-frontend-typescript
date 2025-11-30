@@ -435,7 +435,7 @@ export const getLiveQaStatus = async ({
   queryKey: (string | null)[]
 }) => {
   //get token
-  let token = queryKey[2]
+  let token = queryKey[1]
   if (!token) {
     let error: Error | any = new Error(
       "Error while creating team. No token found."
@@ -484,6 +484,66 @@ export const AssignManagerHandler = async (assignManagerData: any) => {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(assignManagerData),
+  })
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error while assigning manager")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data: any = await response.json()
+  return data
+}
+
+export const userLeftMeetingHandler = async () => {
+  const token = getTokenFromLocalStorage()
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while Pulse Check No token found."
+    )
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error
+  }
+
+  const response = await fetch(`${baseURL}/api/meeting/user-left-meeting`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error while assigning manager")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data: any = await response.json()
+  return data
+}
+
+export const endLiveQaHandler = async () => {
+  const token = getTokenFromLocalStorage()
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while Pulse Check No token found."
+    )
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error
+  }
+
+  const response = await fetch(`${baseURL}/api/manager/end-live-qa`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   })
 
   if (!response.ok) {

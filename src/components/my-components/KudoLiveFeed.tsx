@@ -68,7 +68,9 @@ const KudoLiveFeed: React.FC<{
       console.log("new kudo added", data)
       setKudos((oldKudo) => {
         let newKudos = [data.kudoData, ...oldKudo]
-        newKudos.splice(newKudos.length - 1, 1)
+        if (newKudos.length >= 6) {
+          newKudos.splice(newKudos.length - 1, 1)
+        }
         return newKudos
       })
     })

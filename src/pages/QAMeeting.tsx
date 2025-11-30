@@ -7,11 +7,21 @@ import { isNotEmpty, timeAgo } from "@/helpers/validation"
 import useAppDispatch from "@/hooks/useAppDispatch"
 import useAppSelector from "@/hooks/useAppSelector"
 import useInputValidation from "@/hooks/useInputValidation"
-import { AskQuestionHandler, getLiveQaDataHandler } from "@/http/apiHandlers"
+import {
+  AskQuestionHandler,
+  endLiveQaHandler,
+  getLiveQaDataHandler,
+  userLeftMeetingHandler,
+} from "@/http/apiHandlers"
 import type { IMember } from "@/interfaces/storeInterfaces"
-import { handleQuestionAsked, handleSetOnRefresh } from "@/store/qaMeetingSlice"
+import {
+  handleMemberLeft,
+  handleQuestionAsked,
+  handleSetOnRefresh,
+} from "@/store/qaMeetingSlice"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 // import { useNavigate } from "react-router"
 // import { useNavigate } from "react-router"
 
@@ -20,6 +30,9 @@ const QAMeeting: React.FC = () => {
   const token = useAppSelector((state) => state.auth.token)
   const members = useAppSelector((state) => state.qaMeeting.members)
   const questions = useAppSelector((state) => state.qaMeeting.questions)
+  const email = useAppSelector((state) => {
+    return state.auth.email
+  })
   //   const navigate = useNavigate()
   const { data, isError, isLoading } = useQuery({
     queryKey: ["qa-live-data", token],
@@ -27,6 +40,7 @@ const QAMeeting: React.FC = () => {
     retry: false,
     staleTime: Infinity,
   })
+  console.log("email", email)
 
   const dispatch = useAppDispatch()
   let meetingmembers: IMember[] = []
@@ -69,6 +83,31 @@ const QAMeeting: React.FC = () => {
     }
   }, [data])
 
+  const {
+    mutate: endLiveQaMutate,
+    isError: endLiveQaIsError,
+    reset: endLiveQaReset,
+    isPending: endLivePending,
+  } = useMutation({
+    mutationFn: endLiveQaHandler,
+  })
+  if (endLiveQaIsError) {
+    toast.error("error while ending live QA", {
+      classNames: {
+        toast: "!bg-red-400 !text-gray-100 !border-0",
+      },
+      position: "top-right",
+    })
+    endLiveQaReset()
+  }
+  const handleEndMeeting = () => {
+    endLiveQaMutate()
+  }
+
+  const { mutate: userLeftMutate } = useMutation({
+    mutationFn: userLeftMeetingHandler,
+  })
+
   let socket = useSocket()
   useEffect(() => {
     if (!socket) return
@@ -88,6 +127,11 @@ const QAMeeting: React.FC = () => {
     }
     const handleUserLeft = (data: any) => {
       console.log("data from user left ", data)
+      dispatch(
+        handleMemberLeft({
+          email: data.email,
+        })
+      )
     }
     // console.log("meeting_started_" + teamId)
 
@@ -97,10 +141,11 @@ const QAMeeting: React.FC = () => {
     return () => {
       //   socket.off("user_joined_" + teamId, handleUserJoined)
       socket.off("user_left_" + teamId, handleUserLeft)
-      socket.emit("user-left", {
-        token: token,
-        teamId: teamId,
-      })
+      // socket.emit("user-left", {
+      //   token: token,
+      //   teamId: teamId,
+      // })
+      userLeftMutate()
     }
   }, [socket])
 
@@ -167,7 +212,7 @@ const QAMeeting: React.FC = () => {
   }, [didEdit])
   return (
     <>
-      {(isLoading || isPending) && <LoadingScreen />}
+      {(isLoading || isPending || endLivePending) && <LoadingScreen />}
       <div
         id="QA-Meeting-outer-container"
         className="flex  w-full justify-center"
@@ -178,6 +223,11 @@ const QAMeeting: React.FC = () => {
         >
           <div className="flex flex-row w-full text-gray-300">
             Welcome to Live QA Meet
+            {data && data.existingMeeting.hostEmail == email && (
+              <div onClick={handleEndMeeting} className="ml-auto">
+                <Button variant={"destructive"}>End Session</Button>
+              </div>
+            )}
           </div>
           <div className="flex flex-row w-full mt-4 gap-6">
             <div id="left-panel-questions-area" className="flex flex-col w-2/3">
@@ -219,7 +269,7 @@ const QAMeeting: React.FC = () => {
                             key={question.createdAt}
                           >
                             <div className="flex flex-row">
-                              <div>
+                              {/* <div>
                                 <Button
                                   variant={"outline"}
                                   className="cursor-pointer"
@@ -227,7 +277,7 @@ const QAMeeting: React.FC = () => {
                                 >
                                   Upvote {question.upvotes}
                                 </Button>
-                              </div>
+                              </div> */}
                               <div className="text-lg text-gray-300 px-3">
                                 {question.question}
                               </div>

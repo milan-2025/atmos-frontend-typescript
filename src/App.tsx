@@ -1,4 +1,9 @@
-import { createBrowserRouter, redirect, RouterProvider } from "react-router"
+import {
+  createBrowserRouter,
+  data,
+  redirect,
+  RouterProvider,
+} from "react-router"
 import "./App.css"
 import RootLayout from "./pages/RootLayout"
 import CompanyRegistration from "./pages/CompanyRegistration"
@@ -22,6 +27,7 @@ import EmployeeDashboard from "./pages/EmployeeDasbhboard"
 import SetPassword from "./pages/SetPassword"
 import ManagerDashboard from "./pages/ManagerDashboard"
 import QAMeeting from "./pages/QAMeeting"
+import MeetingEnded from "./pages/MeetingEnded"
 
 function App() {
   const router = createBrowserRouter([
@@ -132,6 +138,18 @@ function App() {
           // },
         },
         {
+          path: "/meeting-ended",
+          element: <MeetingEnded />,
+          // This loader now ONLY focuses on the IsLoggedIn check
+          // loader: async () => {
+          //   if (!(await isLoggedIn())) {
+          //     return redirect("/login", {
+          //       replace: true,
+          //     } as ResponseInit)
+          //   }
+          // },
+        },
+        {
           path: "/qa-meeting",
           element: <QAMeeting />,
           // This loader now ONLY focuses on the IsLoggedIn check
@@ -173,6 +191,7 @@ function App() {
       let name = localStorage.getItem("name")
       let teamId = localStorage.getItem("teamId")
       let email = localStorage.getItem("email")
+      let role = JSON.parse(localStorage.getItem("role") as string)
       dispatch(
         handleLogin({
           token: localToken as string,
@@ -180,6 +199,7 @@ function App() {
           name: name as string,
           teamId: teamId as string,
           email: email as string,
+          role: role,
         })
       )
     }
