@@ -1,10 +1,10 @@
 // import KudoFeed from "@/components/my-components/KudoFeed"
-import KudoLiveFeed from "@/components/my-components/KudoLiveFeed"
-import PulseCheckComponent from "@/components/my-components/PulseCheckComponent"
-import SendKudoComponent from "@/components/my-components/SendKudoComponent"
+import KudoLiveFeed from "@/components/my-components/KudoLiveFeed";
+import PulseCheckComponent from "@/components/my-components/PulseCheckComponent";
+import SendKudoComponent from "@/components/my-components/SendKudoComponent";
 // import { useSocket } from "@/context/SocketContext"
 // import { Button } from "@/components/ui/button"
-import useAppSelector from "@/hooks/useAppSelector"
+import useAppSelector from "@/hooks/useAppSelector";
 // import { ScrollArea } from "@/components/ui/scroll-area"
 
 import {
@@ -14,21 +14,21 @@ import {
   // HeartPulse,
   PartyPopper,
   // Send,
-} from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const EmployeeDashboard: React.FC = () => {
-  const ref = useRef<HTMLDivElement>(null)
-  const [height, setHeight] = useState(0)
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
 
-  const name = useAppSelector((state) => state.auth.fullName)
+  const name = useAppSelector((state) => state.auth.fullName);
   useEffect(() => {
-    console.log("ref--", ref)
+    console.log("ref--", ref);
     if (ref.current) {
-      const measuredH = ref.current.offsetHeight
-      setHeight(measuredH)
+      const measuredH = ref.current.offsetHeight;
+      setHeight(measuredH);
     }
-  }, [])
+  }, []);
 
   return (
     <div
@@ -98,12 +98,12 @@ const EmployeeDashboard: React.FC = () => {
             }}
           >
             {/* Live kudos below */}
-            <KudoLiveFeed height={height} />
+            <KudoLiveFeed />
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EmployeeDashboard
+export default EmployeeDashboard;

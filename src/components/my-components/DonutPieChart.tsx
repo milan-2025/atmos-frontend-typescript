@@ -1,4 +1,4 @@
-import useMediaQuery from "@/hooks/useMediaQuery"
+import useMediaQuery from "@/hooks/useMediaQuery";
 import {
   PieChart,
   Pie,
@@ -6,20 +6,20 @@ import {
   ResponsiveContainer,
   Tooltip,
   Legend,
-} from "recharts"
+} from "recharts";
 // import { type LegendProps } from "recharts"
 
 const CustomTooltip = ({
   active,
   payload,
 }: {
-  active?: boolean
-  payload?: any[]
+  active?: boolean;
+  payload?: any[];
 }) => {
   if (active && payload && payload.length) {
-    const data = payload[0].payload
+    const data = payload[0].payload;
     // Calculate percentage based on the total sum of values (100)
-    const percentage = ((data.value / 100) * 100).toFixed(0)
+    const percentage = ((data.value / 100) * 100).toFixed(0);
 
     return (
       <div className="p-3 bg-card border rounded-md shadow-lg text-sm">
@@ -29,13 +29,13 @@ const CustomTooltip = ({
           <span className="font-mono text-foreground">{percentage}%</span>
         </p>
       </div>
-    )
+    );
   }
-  return null
-}
+  return null;
+};
 
 const DonutPieChart: React.FC<{
-  teamData: any
+  teamData: any;
 }> = ({ teamData }) => {
   // const teamData = [
   //   { name: "Manageable", value: 60, color: "#10b981" }, // Tailwind emerald-500 (Good/Manageable)
@@ -44,15 +44,15 @@ const DonutPieChart: React.FC<{
   //   { name: "Overloaded", value: 5, color: "#ef4444" }, // Tailwind red-500 (Overloaded)
   // ];
   const renderColorfulLegendText = (value: string, entry: any) => {
-    const dataEntry = teamData.find((d: { name: string }) => d.name === value)
+    const dataEntry = teamData.find((d: { name: string }) => d.name === value);
     return (
       <span className="text-sm font-medium  text-gray-200 mr-4">
         {`${value} (${dataEntry?.value}%)`}
       </span>
-    )
-  }
+    );
+  };
 
-  const isLaptop = useMediaQuery("(min-width: 1024px)")
+  const isLaptop = useMediaQuery("(min-width: 1024px)");
 
   const legendProps: any = isLaptop
     ? {
@@ -66,10 +66,11 @@ const DonutPieChart: React.FC<{
         // Mobile/Tablet styles (Vertical) - Tailwind Mobile-First
         layout: "vertical",
         verticalAlign: "top",
-        align: "right", // or 'center' depending on your design
-        wrapperStyle: { paddingLeft: 0, width: "auto" }, // Adjust for vertical layout
-      }
-
+        align: "center", // or 'center' depending on your design
+        wrapperStyle: { paddingLeft: 0, width: "auto", paddingTop: 20 }, // Adjust for vertical layout
+      };
+  const innerRadius = isLaptop ? 90 : 70;
+  const outerRadius = isLaptop ? 140 : 120;
   // const TOTAL_MEMBERS = 40
   return (
     <>
@@ -87,8 +88,8 @@ const DonutPieChart: React.FC<{
             nameKey="name"
             cx="50%"
             cy="50%"
-            innerRadius={90} // Inner radius for the donut hole
-            outerRadius={140} // Outer radius for the chart ring
+            innerRadius={innerRadius} // Inner radius for the donut hole
+            outerRadius={outerRadius} // Outer radius for the chart ring
             paddingAngle={3} // Small gap between slices
             fill="#8884d8"
             labelLine={false}
@@ -134,7 +135,7 @@ const DonutPieChart: React.FC<{
         </PieChart>
       </ResponsiveContainer>
     </>
-  )
-}
+  );
+};
 
-export default DonutPieChart
+export default DonutPieChart;
