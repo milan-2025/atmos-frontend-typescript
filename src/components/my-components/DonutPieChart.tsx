@@ -1,3 +1,4 @@
+import useMediaQuery from "@/hooks/useMediaQuery"
 import {
   PieChart,
   Pie,
@@ -5,19 +6,20 @@ import {
   ResponsiveContainer,
   Tooltip,
   Legend,
-} from "recharts";
+} from "recharts"
+// import { type LegendProps } from "recharts"
 
 const CustomTooltip = ({
   active,
   payload,
 }: {
-  active?: boolean;
-  payload?: any[];
+  active?: boolean
+  payload?: any[]
 }) => {
   if (active && payload && payload.length) {
-    const data = payload[0].payload;
+    const data = payload[0].payload
     // Calculate percentage based on the total sum of values (100)
-    const percentage = ((data.value / 100) * 100).toFixed(0);
+    const percentage = ((data.value / 100) * 100).toFixed(0)
 
     return (
       <div className="p-3 bg-card border rounded-md shadow-lg text-sm">
@@ -27,73 +29,60 @@ const CustomTooltip = ({
           <span className="font-mono text-foreground">{percentage}%</span>
         </p>
       </div>
-    );
+    )
   }
-  return null;
-};
+  return null
+}
 
-const CustomCenterText = ({
-  cx,
-  cy,
-  //   innerRadius,
-  //   outerRadius,
-  value,
-  label,
-}: {
-  cx: string | number;
-  cy: string | number;
-  value: number;
-  label: string;
-}) => {
-  return (
-    <g>
-      <text
-        x={cx}
-        y={cy}
-        textAnchor="middle"
-        dominantBaseline="middle"
-        className="fill-foreground font-bold"
-        style={{ fontSize: "2.5rem" }} // Larger font size for the total number
-      >
-        {value}
-      </text>
-      <text
-        x={cx}
-        y={typeof cy === "number" ? cy + 30 : parseInt(cy as string) + 30}
-        textAnchor="middle"
-        dominantBaseline="middle"
-        className="fill-muted-foreground"
-        style={{ fontSize: "0.875rem" }} // Smaller font size for the label
-      >
-        {label}
-      </text>
-    </g>
-  );
-};
-
-const DonutPieChart = () => {
-  const TEAM_DATA = [
-    { name: "Manageable", value: 60, color: "#10b981" }, // Tailwind emerald-500 (Good/Manageable)
-    { name: "Heavy", value: 20, color: "#facc15" }, // Tailwind yellow-400 (Manageable/Warning)
-    // { name: "At Risk", value: 15, color: "#f97316" }, // Tailwind orange-500 (Heavy/At Risk)
-    { name: "Overloaded", value: 5, color: "#ef4444" }, // Tailwind red-500 (Overloaded)
-  ];
+const DonutPieChart: React.FC<{
+  teamData: any
+}> = ({ teamData }) => {
+  // const teamData = [
+  //   { name: "Manageable", value: 60, color: "#10b981" }, // Tailwind emerald-500 (Good/Manageable)
+  //   { name: "Heavy", value: 20, color: "#facc15" }, // Tailwind yellow-400 (Manageable/Warning)
+  //   // { name: "At Risk", value: 15, color: "#f97316" }, // Tailwind orange-500 (Heavy/At Risk)
+  //   { name: "Overloaded", value: 5, color: "#ef4444" }, // Tailwind red-500 (Overloaded)
+  // ];
   const renderColorfulLegendText = (value: string, entry: any) => {
-    const dataEntry = TEAM_DATA.find((d) => d.name === value);
+    const dataEntry = teamData.find((d: { name: string }) => d.name === value)
     return (
       <span className="text-sm font-medium  text-gray-200 mr-4">
         {`${value} (${dataEntry?.value}%)`}
       </span>
-    );
-  };
+    )
+  }
 
-  const TOTAL_MEMBERS = 40;
+  const isLaptop = useMediaQuery("(min-width: 1024px)")
+
+  const legendProps: any = isLaptop
+    ? {
+        // Laptop/Desktop styles (Horizontal)
+        layout: "horizontal",
+        verticalAlign: "bottom",
+        align: "center",
+        wrapperStyle: { paddingTop: 10, width: "100%" },
+      }
+    : {
+        // Mobile/Tablet styles (Vertical) - Tailwind Mobile-First
+        layout: "vertical",
+        verticalAlign: "top",
+        align: "right", // or 'center' depending on your design
+        wrapperStyle: { paddingLeft: 0, width: "auto" }, // Adjust for vertical layout
+      }
+
+  // const TOTAL_MEMBERS = 40
   return (
     <>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer
+        style={{
+          padding: 0,
+        }}
+        width="150%"
+        height="150%"
+      >
         <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
           <Pie
-            data={TEAM_DATA}
+            data={teamData}
             dataKey="value"
             nameKey="name"
             cx="50%"
@@ -107,7 +96,7 @@ const DonutPieChart = () => {
             stroke="var(--card)"
             strokeWidth={4}
           >
-            {TEAM_DATA.map((entry: any, index: any) => (
+            {teamData.map((entry: any, index: any) => (
               <Cell
                 key={`cell-${index}`}
                 fill={entry.color}
@@ -127,17 +116,25 @@ const DonutPieChart = () => {
           <Tooltip content={<CustomTooltip />} />
           {/* Legend positioned at the bottom */}
           <Legend
-            layout="horizontal"
-            verticalAlign="bottom"
-            align="center"
-            height={36}
+            // layout="horizontal"
+            // verticalAlign="bottom"
+            // className="hidden"
+            // horizAdvX={"left"}
+            // horizontalAlign=
+            // className=""
+            // horizOriginX={-50}
+            // align="center"
+            // // margin={{ right: -400 }}
+            // height={16}
+            // width={1100}
             formatter={renderColorfulLegendText}
-            wrapperStyle={{ paddingTop: 20 }}
+            {...legendProps}
+            // wrapperStyle={{ paddingTop: 0 }}
           />
         </PieChart>
       </ResponsiveContainer>
     </>
-  );
-};
+  )
+}
 
-export default DonutPieChart;
+export default DonutPieChart

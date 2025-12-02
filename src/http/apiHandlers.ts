@@ -556,3 +556,42 @@ export const endLiveQaHandler = async () => {
   let data: any = await response.json()
   return data
 }
+
+export const getPulsePiChartData = async ({
+  signal,
+  queryKey,
+}: {
+  signal?: AbortSignal
+  queryKey: (string | null)[]
+}) => {
+  //get token
+  let token = queryKey[1]
+  if (!token) {
+    let error: Error | any = new Error(
+      "Error while creating team. No token found."
+    )
+    // error.code = response.status
+    // error.info = await response.json()
+    throw error
+  }
+
+  // send response
+  const response = await fetch(baseURL + "/api/manager/pulse-pi-chart", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    signal: signal,
+  })
+
+  if (!response.ok) {
+    let error: Error | any = new Error("Error can't get live data ")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data: any = await response.json()
+
+  return data
+}
